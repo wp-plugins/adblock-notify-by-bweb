@@ -38,6 +38,9 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
+.titan-framework-panel-wrap .an-red{
+	color: #db3939;
+}
 @-moz-keyframes blinker {  
     0% { opacity: 1.0; }
     50% { opacity: 0.3; }

@@ -2,12 +2,14 @@
 /**
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
- * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings
- * Version: 0.1
+ * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Widget with adblock counter included!
+ * Version: 0.2
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
+ * Text Domain: an-translate
+ * Domain Path: /languages
  */
- 
+
  
 /***************************************************************
  * SECURITY : Exit if accessed directly
@@ -21,7 +23,6 @@ if ( !function_exists('add_action') ) {
 if ( !defined('ABSPATH') ) {
 	exit;
 }
-
 
 
 /***************************************************************
@@ -48,11 +49,25 @@ if ( !defined('AN_COOKIE') ) {
 
 
 /***************************************************************
+ * Set priority to properly load plugin translation
+ ***************************************************************/
+add_action( 'plugins_loaded', 'an_translate_load_textdomain', 1 );
+
+
+/***************************************************************
  * Load plugin files
  ***************************************************************/
-//require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+require_once( AN_PATH . 'lib/titan-framework/titan-framework.php' );
 require_once( AN_PATH . 'adblock-notify-options.php' );
 require_once( AN_PATH . 'adblock-notify-functions.php' );
+
+/***************************************************************
+ * Load plugin textdomain
+ ***************************************************************/
+function an_translate_load_textdomain() {
+	$path = basename( dirname( __FILE__ ) ) . '/languages/';
+	load_plugin_textdomain( 'an-translate', false, $path);
+}
 
 
 /***************************************************************
@@ -98,11 +113,26 @@ add_action('admin_enqueue_scripts', 'an_admin_scripts');
  * Add settings link on plugin page
  ***************************************************************/
 function an_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page='.AN_ID.'">Settings</a>'; 
+  $settings_link = '<a href="options-general.php?page='.AN_ID.'">'. __( 'Settings', 'an-translate' ) .'</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
 }
 add_filter("plugin_action_links_".AN_BASE, 'an_settings_link' );
+
+
+/***************************************************************
+ * Admin Panel Favico
+ ***************************************************************/
+function an_add_favicon() {
+    $screen = get_current_screen();
+    if ( $screen->id != 'toplevel_page_'. AN_ID )
+        return;
+
+  	$favicon_url = AN_URL . 'img/icon_bweb.png';
+	echo '<link rel="shortcut icon" href="' . $favicon_url . '" />';
+}
+add_action('admin_head', 'an_add_favicon');
+ 
 
 /***************************************************************
  * Remove Plugin settings from DB on uninstallation (= plugin deletion) 

@@ -1,16 +1,16 @@
 === Adblock Notify by b*web ===
 Contributors: briKou
-Donate link: http://b-website.com/adblock-notify-plugin-for-WordPress/
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive
 Requires at least: 3.7
 Tested up to: 4.0
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-Plugin Capabilities :
+= Plugin Capabilities =
 
 * Detect adBlocker by three check methods
 * Custom notification message with jQuery Popup ([Reveal by ZURB](http://zurb.com/playground/reveal-modal-plugin)) or Javascript redirect
@@ -30,46 +30,26 @@ Plugin Capabilities :
 * Use cookie for a better user UI
 * Cross browser detection
 * Remove settings from database on plugin uninstall
+* Multilanguage support on the admin pages (EN & FR are currently available)
 
-[DEMO](http://b-website.com/adblock-notify-plugin-for-WordPress "Try It!")
+[CHECK OUT THE DEMO](http://b-website.com/adblock-notify-plugin-for-WordPress "Try It!")
 
 
-WordPress requirement:
+Please ask for help or report bugs if something goes wrong. It is the best way to make the community go ahead !
+
+
+
+= WordPress requirement =
 
 * WordPress 3.7+ (not tested on above versions, but may works)
 
 
-Warning:
+= Notice =
 
 * May not work properly with cache system (depend on parameters)
 * Need your user to have Javascript activated (no js option included)
 
-== Installation ==
-1. Upload and activate the plugin
-2. Click on the "Adblock Notify" menu
-3. Follow instructions, every option is documented ;)	
-
-== Frequently Asked Questions ==
-
-= Is it working with Google Adsense Ads? =
-
-Yes, and probably with all kinf of content hidden by an adblocker software.
-
-== Screenshots ==
-1. Modal box notification
-2. Plugin admin page
-3. Statistics on the WordPress Dashboard
-
-== Changelog ==
-= 0.1 =
-* First stable version.
-
-
-== Upgrade Notice ==
-= 0.1 =
-* First stable version.
-
-== How to use it (full details) ==
+= How to use it (full details) =
 You can notify users with an activated Adblocker software by one of THREE ways !
 * A pretty cool and lightweight Modal Box with a custom content : the COMPLIANT solution
 * A simple redirection to the page of your choice : the AGRESSIVE solution
@@ -89,19 +69,19 @@ You can insert a custom message where your hidden ads would normally appear by c
 Note: Some minimal HTML knowledge is required to set up this functionality.
 
 What does "Clone ad container" mean? 
-	It means you can ask Adblock Notify Plugin to copy the CSS properties of the element that contains your ad to a new element which will not be hidden by an adblocker software. With this process, your design should not break. 
-	The new element will be the same type (DIV,SPAN,etc.) as its source, and will have the .an-alternative class.
+It means you can ask Adblock Notify Plugin to copy the CSS properties of the element that contains your ad to a new element which will not be hidden by an adblocker software. With this process, your design should not break. 
+The new element will be the same type (DIV,SPAN,etc.) as its source, and will have the .an-alternative class.
 	
-	Available options are:
-		Custom Mode: Will try to catch all the CSS rules defined in your theme files, and let you choose which ones to keep (see Custom Mode CSS properties).
-		Soft Mode (Recommended): Will try to catch all the CSS rules defined in your theme files, and add them to the new created element. If the browser does not support this feature, it will try Hard Mode fetching.
-		Hard Mode: Will try to fetch all the elements CSS rules based on browser CSS compilation (not reading directly in your CSS files). This option may add a lot of inline CSS rules to your newly created element.
+Available options are:
+Custom Mode: Will try to catch all the CSS rules defined in your theme files, and let you choose which ones to keep (see Custom Mode CSS properties).
+Soft Mode (Recommended): Will try to catch all the CSS rules defined in your theme files, and add them to the new created element. If the browser does not support this feature, it will try Hard Mode fetching.
+Hard Mode: Will try to fetch all the elements CSS rules based on browser CSS compilation (not reading directly in your CSS files). This option may add a lot of inline CSS rules to your newly created element.
 	
-	This feature is performed through Javascript (+jQuery) and is 95% functional on all modern browser even on IE8+. For the 5% left, the plugin will drop potential JS errors and insert .an-alternative div. 
-	Tested and works great on Chrome, Firefox, Safari, Opera, IE8+
+This feature is performed through Javascript (+jQuery) and is 95% functional on all modern browser even on IE8+. For the 5% left, the plugin will drop potential JS errors and insert .an-alternative div. 
+Tested and works great on Chrome, Firefox, Safari, Opera, IE8+
 
 What's appended if I don't turn on this option? 
-	The plugin will append a new "clean" DIV element with .an-alternative class just before the advert container. You can add your own custom rules with the Custom CSS field.
+The plugin will append a new "clean" DIV element with .an-alternative class just before the advert container. You can add your own custom rules with the Custom CSS field.
 
 
 Adblock Notify Stats Widget (WordPress Dashboard Widget) :
@@ -154,3 +134,39 @@ Available options:
 	* Clone ad container?
 	* Custom Mode CSS properties (Comma separated)
 	* Custom CSS (Advance users)
+
+== Installation ==
+1. Upload and activate the plugin
+2. Click on the "Adblock Notify" menu
+3. Follow instructions, every option is documented ;)	
+
+== Frequently Asked Questions ==
+
+= Is it working with Google Adsense Ads? =
+
+Yes, and probably with all kinf of content hidden by an adblocker software.
+
+== Screenshots ==
+1. Modal box notification
+2. Plugin admin page
+3. Statistics on the WordPress Dashboard
+
+== Changelog ==
+= 0.2 =
+* Admin page style enhancement.
+* Change the way Titan Framework is embeded
+* Translatable ready (add French translation)
+* Improve widget counter function
+* Some minore php fixing.
+
+= 0.1 =
+* First stable version.
+
+
+== Upgrade Notice ==
+= 0.2 =
+* Please deactivate then reactivate if admin title is missing.
+
+= 0.1 =
+* First stable version.
+

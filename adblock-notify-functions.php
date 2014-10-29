@@ -36,7 +36,7 @@ function an_prepare(){
 	$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
 	
 	//remove cookie if deactivate
-	an_remove_cookie('anCookie', $anOptionCookie);
+	an_remove_cookie(AN_COOKIE, $anOptionCookie);
 	
 	//redirect URL with JS
 	$anPermalink = an_url_redirect($anPageRedirect);
@@ -265,19 +265,6 @@ function hex2rgba($color, $opacity = false) {
 
 
 /***************************************************************
- * Admin Panel Favico
- ***************************************************************/
-function an_add_favicon() {
-    $screen = get_current_screen();
-    if ( $screen->id != 'toplevel_page_'. AN_ID )
-        return;
-
-  	$favicon_url = AN_URL . 'img/icon_bweb.png';
-	echo '<link rel="shortcut icon" href="' . $favicon_url . '" />';
-}
-add_action('admin_head', 'an_add_favicon');
- 
-/***************************************************************
  * Page views & page blocked counter
  ***************************************************************/
 function an_adblock_counter() {
@@ -294,7 +281,9 @@ function an_adblock_counter() {
 	$an_state = $_POST['an_state'];
 
 	//update option with new values
-	$anCount[$an_state] = $anCount[$an_state]+1;
+	$anCount[$an_state]++;
+
+	//update db	
 	update_option('adblocker_notify_counter', $anCount);
 
 	//then update history
@@ -391,7 +380,15 @@ function an_data_histoty($val=null){
  ***************************************************************/
 function an_get_counters() {
 	$anCount = get_option('adblocker_notify_counter');
+
+	//prevent plugin's counter to be higher than the page counter if page is refreshed during the ajax call or if wordpress caching systeme in not badly configured
+	if($anCount['history'][0]['blocked'] > $anCount['history'][0]['total']){
+		$anCount['history'][0]['total'] = $anCount['history'][0]['blocked'];
+	}
 	
+	//update db	
+	update_option('adblocker_notify_counter', $anCount);
+
 	if(empty($anCount['total']))
 	$anCount['total'] = 0;
 
@@ -425,44 +422,46 @@ function an_get_counters() {
 		<table class="an-stats-table">
 			<tr class="an-top">
 			  <td></td>
-			  <td>Total</td> 
-			  <td>Today</td>
+			  <td>'. __( 'Total', 'an-translate' ) .'</td> 
+			  <td>'. __( 'Today', 'an-translate' ) .'</td>
 			</tr>
 			<tr>
-			  <td style="text-align:left;"><span style="color:#34495e">&#9608</span> Pages Views</td>
+			  <td style="text-align:left;"><span style="color:#34495e">&#9608</span> '. __( 'Pages Views', 'an-translate' ) .'</td>
 			  <td>' .$anCount['total'] .'</td> 
 			  <td>' .$anCount['history'][0]['total'] .'</td>
 			</tr>
 			<tr>
-			  <td style="text-align:left;"><span style="color:#e74c3c">&#9608</span> Pages with Adblock</td>
+			  <td style="text-align:left;"><span style="color:#e74c3c">&#9608</span> '. __( 'Pages with Adblock', 'an-translate' ) .'</td>
 			  <td>' .$anCount['blocked'] .'</td> 
 			  <td>' .$anCount['history'][0]['blocked'] .'</td>
 			</tr>
 		</table>
 
 		<div class="an-canvas-container-donut">
-			<div class="an-average"><span>Total</span>' .$average. '%<span>Ads blocked</span></div>
+			<div class="an-average"><span>'. __( 'Total', 'an-translate' ) .'</span>' .$average. '%<span>'. __( 'Ads blocked', 'an-translate' ) .'</span></div>
 			<canvas id="an-canvas-donut" height="180"></canvas>
 		</div>
 
 		<div class="an-canvas-container-donut">
-			<div class="an-average"><span>Today</span>' .$averageToday. '%<span>Ads blocked</span></div>
+			<div class="an-average"><span>'. __( 'Today', 'an-translate' ) .'</span>' .$averageToday. '%<span>'. __( 'Ads blocked', 'an-translate' ) .'</span></div>
 			<canvas id="an-canvas-donut-today" height="180"></canvas>
 		</div>
 		<p>
-			<strong>' . $anCount['deactivated'] . '</strong> Ad Blocker software deactivated
+			<strong>' . $anCount['deactivated'] . '</strong> '. __( 'Ad Blocker software deactivated', 'an-translate' ) .'
 			<br />
-			<i>You may probably increase this number by improving your custom messages</i>
+			<i>'. __( 'You may probably increase this number by improving your custom messages', 'an-translate' ) .'</i>
 		</p>
 		<div id="an-canvas-container-line">
 			<canvas id="an-canvas-line"></canvas>
 		</div>
 		<p>
-			<a href="options-general.php?page='.AN_ID.'" class="button action">Settings</a>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp<a href="options-general.php?page='.AN_ID.'&an-reset=true"  onclick="javascript:if(!confirm(\'Are you sure you want to delete permanently your datas?\')) return false;" class="button action">Reset Stats</a>
+			<a href="options-general.php?page='.AN_ID.'" class="button action">'. __( 'Settings', 'an-translate' ) .'</a>
+			&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp
+			<a href="options-general.php?page='.AN_ID.'&an-reset=true"  onclick="javascript:if(!confirm(\''. __( 'Are you sure you want to delete permanently your datas?', 'an-translate' ) .'\')) return false;" class="button action">'. __( 'Reset Stats', 'an-translate' ) .'</a>
 		</p>
-		<i>Admins are excluded from this statistics.</i>
+		<i>'. __( 'Admins are excluded from this statistics.', 'an-translate' ) .'</i>
 	
-		<style>#an_dashboard_widgets i {color:#bbb; font-size: 0.85em}.an-stats-table {width: 100%;}.an-stats-table, .an-stats-table td, .an-stats-table th {border: 1px solid #f8f8f8;border-collapse:collapse;}.an-top {	background-color: #f8f8f8;}.an-canvas-container-donut {width:50%; float: left; position:relative;}.an-canvas-container-donut,#an_dashboard_widgets .inside{text-align:center}#an-canvas-donut,#an-canvas-donut-today {display:inline-block; margin-top:10px;}.an-average{position:absolute;left:50%;top:70px;font-size:1.45em;font-weight:700;display:inline-block;width:85px;text-align:center;margin-left:-43px}.an-average span{text-align:center;font-size:.6em;display:block}#an-canvas-container-line{margin-top:5px;width:100%}</style>
+		<style>#an_dashboard_widgets i {color:#bbb; font-size: 0.85em}.an-stats-table {width: 100%;}.an-stats-table, .an-stats-table td, .an-stats-table th {border: 1px solid #f8f8f8;border-collapse:collapse;}.an-top {	background-color: #f8f8f8;}.an-canvas-container-donut {width:50%; float: left; position:relative;}.an-canvas-container-donut,#an_dashboard_widgets .inside{text-align:center}#an-canvas-donut,#an-canvas-donut-today {display:inline-block; margin-top:10px;}.an-average{position:absolute;left:50%;top:77px;font-size:1.45em;font-weight:700;display:inline-block;width:85px;text-align:center;margin-left:-43px}.an-average span { text-align: center; font-size: .5em; display: block; height: 12px; line-height: 12px;}#an-canvas-container-line{margin-top:5px;width:100%}</style>
 		<script type="text/javascript">
 		var doughnutData = [
 				{
@@ -525,7 +524,7 @@ function an_get_counters() {
  
 function an_dashboard_widgets() {
 	global $wp_meta_boxes;
-	wp_add_dashboard_widget('an_dashboard_widgets', AN_NAME .' Stats', 'an_get_counters');
+	wp_add_dashboard_widget('an_dashboard_widgets', 'Adblock Notify Stats', 'an_get_counters');
 }
 add_action('wp_dashboard_setup', 'an_dashboard_widgets');
 
@@ -534,7 +533,7 @@ add_action('wp_dashboard_setup', 'an_dashboard_widgets');
  * Reset plugin options
  ***************************************************************/
 function an_stats_notice() {
-	echo '<div class="updated top"><p><strong>'. AN_NAME .' stats have been successfully cleared.</strong></p></div>';
+	echo '<div class="updated top"><p><strong>Adblock Notify stats have been successfully cleared.</strong></p></div>';
 }
 
 function an_reset_stats() {
