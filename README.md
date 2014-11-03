@@ -1,5 +1,5 @@
 === Adblock Notify by b*web ===
-Contributors: briKou
+Contributors: Brice Capobianco
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive
 Requires at least: 3.7
@@ -8,11 +8,13 @@ Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+Detect Adblock and nofity users. Simple plugin with get around options and a lot of settings. Dashboard widget with counter & statistics included!
+
 == Description ==
 
 = Plugin Capabilities =
 
-* Detect adBlocker by three check methods
+* Detect adBlocker (eg Adblock Plus) by three check methods
 * Custom notification message with jQuery Popup ([Reveal by ZURB](http://zurb.com/playground/reveal-modal-plugin)) or Javascript redirect
 * Replace blocked ads by custom message
 * Three available options to notify your users
@@ -136,15 +138,24 @@ Available options:
 	* Custom CSS (Advance users)
 
 == Installation ==
-1. Upload and activate the plugin
+1. Upload and activate the plugin (or install it through the WP admin console)
 2. Click on the "Adblock Notify" menu
 3. Follow instructions, every option is documented ;)	
 
 == Frequently Asked Questions ==
 
 = Is it working with Google Adsense Ads? =
-
 Yes, and probably with all kinf of content hidden by an adblocker software.
+
+= Is it compatible with caching systeme =
+Yes it is, but you have to exclude "advertisement.js" from the cache files list.
+
+= The plugin is activated and setting up, but nothing append. =
+Please, inspect your page and search for an_admin_scripts.js or advertisement.js.
+If they are not visible on your page DOM, there is probably a problem with your caching/minify plugin.
+Purge all cache and rebuild your minify, then check again.
+You can also try to open a new private tab to have a new "clean" test environment.
+
 
 == Screenshots ==
 1. Modal box notification
@@ -152,6 +163,11 @@ Yes, and probably with all kinf of content hidden by an adblocker software.
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+= 1.0 =
+* First release
+* Minor PHP improvements
+* Update readme.txt
+
 = 0.2 =
 * Admin page style enhancement.
 * Change the way Titan Framework is embeded

@@ -41,7 +41,6 @@ function an_prepare(){
 	//redirect URL with JS
 	$anPermalink = an_url_redirect($anPageRedirect);
 
-
 	//Modal box effect
 	$anOptionModalEffect = an_modal_parameter($anOptionModalEffect);
 	//Modal box close
@@ -95,10 +94,9 @@ function an_prepare(){
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
-	
 	echo $output;
 
-	}
+}
 add_action('wp_footer', 'an_prepare');
 
 
@@ -157,6 +155,7 @@ function an_remove_cookie($cookieName, $anOptionCookie){
 	}
 }
 
+
 /***************************************************************
  * Restart cookie on every options save.
  ***************************************************************/
@@ -168,6 +167,7 @@ function an_restart_cookie(){
 }
 add_action('tf_admin_options_saved_adblocker_notify', 'an_restart_cookie');
 
+
 /***************************************************************
  * Set cookie for No JS redirection.
  ***************************************************************/
@@ -177,6 +177,7 @@ function an_nojs_cookie($expiration){
 		setcookie(AN_COOKIE, true, $expiration, '/');
 	}
 }
+ 
  
 /***************************************************************
  * Modal Box effect parameter
@@ -226,14 +227,13 @@ function an_modal_close($key){
  * Src: http://mekshq.com/how-to-convert-hexadecimal-color-code-to-rgb-or-rgba-using-php/
  ***************************************************************/
 function hex2rgba($color, $opacity = false) {
-
 	$default = 'rgb(0,0,0)';
 
 	//Return default if no color provided
 	if(empty($color))
           return $default; 
 
-	//Sanitize $color if "#" is provided 
+		//Sanitize $color if "#" is provided 
         if ($color[0] == '#' ) {
         	$color = substr( $color, 1 );
         }
@@ -272,12 +272,10 @@ function an_adblock_counter() {
 	return;
 	
 	$anCount = get_option('adblocker_notify_counter');
-	
 	if(empty($anCount)){
 		add_option('adblocker_notify_counter', array('total' => 0, 'blocked' => 0, 'deactivated' => 0, 'history' => array()));
 		$anCount = get_option('adblocker_notify_counter');
 	}
-	
 	$an_state = $_POST['an_state'];
 
 	//update option with new values
@@ -359,6 +357,7 @@ function an_history_counter($val=null) {
 
 }
 
+
 /***************************************************************
  * Data history extraction & order revert for chart
  ***************************************************************/
@@ -376,7 +375,7 @@ function an_data_histoty($val=null){
 
 
 /***************************************************************
- * Display
+ * Display the Dashboard Widget
  ***************************************************************/
 function an_get_counters() {
 	$anCount = get_option('adblocker_notify_counter');
@@ -461,7 +460,18 @@ function an_get_counters() {
 		</p>
 		<i>'. __( 'Admins are excluded from this statistics.', 'an-translate' ) .'</i>
 	
-		<style>#an_dashboard_widgets i {color:#bbb; font-size: 0.85em}.an-stats-table {width: 100%;}.an-stats-table, .an-stats-table td, .an-stats-table th {border: 1px solid #f8f8f8;border-collapse:collapse;}.an-top {	background-color: #f8f8f8;}.an-canvas-container-donut {width:50%; float: left; position:relative;}.an-canvas-container-donut,#an_dashboard_widgets .inside{text-align:center}#an-canvas-donut,#an-canvas-donut-today {display:inline-block; margin-top:10px;}.an-average{position:absolute;left:50%;top:77px;font-size:1.45em;font-weight:700;display:inline-block;width:85px;text-align:center;margin-left:-43px}.an-average span { text-align: center; font-size: .5em; display: block; height: 12px; line-height: 12px;}#an-canvas-container-line{margin-top:5px;width:100%}</style>
+		<style>
+			#an_dashboard_widgets i {color:#bbb; font-size: 0.85em}
+			.an-stats-table {width: 100%;}
+			.an-stats-table, .an-stats-table td, .an-stats-table th {border: 1px solid #f8f8f8;border-collapse:collapse;}
+			.an-top {background-color: #f8f8f8;}
+			.an-canvas-container-donut {width:50%; float: left; position:relative;}
+			.an-canvas-container-donut,#an_dashboard_widgets .inside{text-align:center}
+			#an-canvas-donut,#an-canvas-donut-today {display:inline-block; margin-top:10px;}
+			.an-average{position:absolute;left:50%;top:77px;font-size:1.45em;font-weight:700;display:inline-block;width:85px;text-align:center;margin-left:-43px}
+			.an-average span {text-align: center; font-size: .5em; display: block; height: 12px; line-height: 12px;}
+			#an-canvas-container-line{margin-top:5px;width:100%}
+		</style>
 		<script type="text/javascript">
 		var doughnutData = [
 				{
@@ -501,11 +511,8 @@ function an_get_counters() {
 					pointStrokeColor : "#e74c3c",
 					data : ['. an_data_histoty('blocked') .']
 				}
-			]
-			
+			]			
 		}
-		//var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
-
 		jQuery(document).ready(function($) {
 			var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
 			var widthdonut = $("#an_dashboard_widgets .inside .an-canvas-container-donut").width();
@@ -522,6 +529,10 @@ function an_get_counters() {
 	echo $output;
 }
  
+
+/***************************************************************
+ * Register the Dashboard Widget display function
+ ***************************************************************/
 function an_dashboard_widgets() {
 	global $wp_meta_boxes;
 	wp_add_dashboard_widget('an_dashboard_widgets', 'Adblock Notify Stats', 'an_get_counters');

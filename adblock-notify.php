@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
- * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Widget with adblock counter included!
- * Version: 0.2
+ * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
+ * Version: 1.0
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -52,6 +52,10 @@ if ( !defined('AN_COOKIE') ) {
  * Set priority to properly load plugin translation
  ***************************************************************/
 add_action( 'plugins_loaded', 'an_translate_load_textdomain', 1 );
+function an_translate_load_textdomain() {
+	$path = basename( dirname( __FILE__ ) ) . '/languages/';
+	load_plugin_textdomain( 'an-translate', false, $path);
+}
 
 
 /***************************************************************
@@ -60,14 +64,6 @@ add_action( 'plugins_loaded', 'an_translate_load_textdomain', 1 );
 require_once( AN_PATH . 'lib/titan-framework/titan-framework.php' );
 require_once( AN_PATH . 'adblock-notify-options.php' );
 require_once( AN_PATH . 'adblock-notify-functions.php' );
-
-/***************************************************************
- * Load plugin textdomain
- ***************************************************************/
-function an_translate_load_textdomain() {
-	$path = basename( dirname( __FILE__ ) ) . '/languages/';
-	load_plugin_textdomain( 'an-translate', false, $path);
-}
 
 
 /***************************************************************

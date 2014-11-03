@@ -24,11 +24,9 @@ function an_create_options() {
 	$generalTab = $an_panel->createTab( array(
 		'name' => __( 'Adblock Notify Options', 'an-translate' ),
 	) );
-	
 	$modalTab = $an_panel->createTab( array(
 		'name' => __( 'Modal Visual Options', 'an-translate' ),
 	) );
-	
 	$alternativeTab = $an_panel->createTab( array(
 		'name' => __( 'Alternative Message', 'an-translate' ),
 	) );
@@ -37,7 +35,6 @@ function an_create_options() {
 	/***************************************************************
 	 * Create tab's options
 	 ***************************************************************/
-	
 	//Adblock Notify Options
 	$generalTab->createOption( array(
 		'type' => 'note',
@@ -80,8 +77,6 @@ function an_create_options() {
 		'desc' => __( 'Would you like to use the Modal Box or redirect users to a custom page when adblock is detected? - Default: None', 'an-translate' ),
 		'default' => '1',
 	) );
-	
-	
 	$generalTab->createOption( array(
 			'name' => __( 'Cookies Options', 'an-translate' ),
 			'type' => 'heading',
@@ -107,7 +102,6 @@ function an_create_options() {
 			'max' => '360',
 			'step' => '1',
 	) );
-	
 	$generalTab->createOption( array(
 			'name' =>  __( 'Modal Box Options', 'an-translate' ),
 			'type' => 'heading',
@@ -132,8 +126,6 @@ function an_create_options() {
 				<p><strong>'. __( 'Please add', 'an-translate' ) .'<a title="http://b-website.com/" href="b-website.com" target="_blank">www.b-website.com</a> '. __( 'to your ad blocking whitelist or disable your adblocking software.', 'an-translate' ) .'<strong></p>
 			',
 	) );
-	
-	
 	$generalTab->createOption( array(
 			'name' =>  __( 'Redirection Options', 'an-translate' ),
 			'type' => 'heading',
@@ -144,7 +136,6 @@ function an_create_options() {
 			'type' => 'select-pages',
 			'desc' =>  __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
 	) );
-	
 	$generalTab->createOption( array(
 			'name' =>  __( 'No JS Redirection', 'an-translate' ) .' <span class="blink an-red">'. __( 'Warning', 'an-translate' ) .'</span>',
 			'type' => 'heading',
@@ -162,7 +153,6 @@ function an_create_options() {
 			'type' => 'select-pages',
 			'desc' => __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
 	) );
-	
 	
 	//Modal Visual Options
 	$modalTab->createOption( array(
@@ -202,7 +192,6 @@ function an_create_options() {
 		),
 		'default' => '1',
 	) );
-	
 	$modalTab->createOption( array(
 		'name' => __( 'Modal Box Style', 'an-translate' ),
 		'type' => 'heading',
@@ -277,7 +266,6 @@ function an_create_options() {
 		'desc' => __( 'Yes - Default: Unchecked', 'an-translate' ) .'<br /><strong class="an-red">'. __( 'If unchecked, below options will not be used', 'an-translate' ) .'</strong>',
 		'default' => false,
 	) );
-	
 	$alternativeTab->createOption( array(
 			'name' => __( 'Required Settings', 'an-translate' ),
 			'type' => 'heading',
@@ -301,7 +289,6 @@ function an_create_options() {
 				<p>'. __( 'Please add', 'an-translate' ) .' <a title="http://b-website.com/" href="b-website.com" target="_blank">www.b-website.com</a> '. __( 'to your adblocking whitelist or disable your adblocking software.', 'an-translate' ) .'</p>
 			',
 	) );
-	
 	$alternativeTab->createOption( array(
 		'name' => __( 'Optional Settings', 'an-translate' ),
 		'type' => 'heading',
@@ -371,6 +358,7 @@ function an_create_options() {
 					</p>',
 		'lang' => 'css',
 	) );
+
 	
 	/***************************************************************
 	 * Launch options framework instance
@@ -396,8 +384,7 @@ function an_create_options() {
 	
 	/***************************************************************
 	 * Launch options framework instance
-	 ***************************************************************/
-	 
+	 ***************************************************************/ 
 	function an_save_setting_data() {
 		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
 	
@@ -429,7 +416,6 @@ function an_create_options() {
 		$anAlternativeClone = $an_option->getOption( 'an_alternative_clone' );
 		$anAlternativeProperties = $an_option->getOption( 'an_alternative_properties' );
 		$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
-	
 	
 	}
 	add_action('wp_head' , 'an_save_setting_data' );
