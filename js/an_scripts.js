@@ -59,7 +59,7 @@ jQuery(document).ready(function($) {
 		if(an_state === true ){ 		
 
 			//IF MODAL BOX IS ACTIVATED
-			if ( anOptions.anOptionChoice == 2 && getCookie('anCookie') !== 'true') {
+			if ( anOptions.anOptionChoice == 2 && getCookie('anCookie') !== 'true' || anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 2) {
 				
 				if(anOptions.anOptionModalBxtitle != ''){
 					var headingColor = 'style="color:'+ anOptions.anOptionModalBxtitle +'"';
@@ -183,14 +183,15 @@ jQuery(document).ready(function($) {
 	
 	}
 
-
 //COUNT PAGE VIEWS WITH ADBLOCKER
 function an_blocker_counter(value){
-	$.post(ajax_object.ajaxurl, {
-		action: 'call_an_adblock_counter',
-		an_state: value
-	});
-	return false;
+	if(anOptions.anOptionStats != 2){
+		$.post(ajax_object.ajaxurl, {
+			action: 'call_an_adblock_counter',
+			an_state: value
+		});
+		return false;
+	}
 };	
 
 

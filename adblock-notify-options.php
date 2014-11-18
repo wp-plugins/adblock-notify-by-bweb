@@ -59,9 +59,6 @@ function an_create_options() {
 						<br />
 						'. __( 'You can deactivate them, however if your visitor has an activated adblocker software they will see a modal box or get a redirection on every visited page.', 'an-translate' ) .'
 					</p>
-					<p>
-						<strong class="an-red">'. __( 'Adblock Notify Stats widget is available on your admin dashboard (if not visible, go to the top menu and visit "Screen Options").', 'an-translate' ) .'</strong> 
-					</p>
 				</div>
 		',
 	) );
@@ -69,13 +66,24 @@ function an_create_options() {
 		'name' => __( 'Modal Box or Redirection ?', 'an-translate' ),
 		'id' => 'an_option_choice',
 		'options' => array(
-			'1' => __( 'None (only stats)', 'an-translate' ),
-			'2' => __( 'Modal Box (+ stats)', 'an-translate' ),
-			'3' => __( 'Page redirection (+ stats)', 'an-translate' )
+			'1' => __( 'None', 'an-translate' ),
+			'2' => __( 'Modal Box', 'an-translate' ),
+			'3' => __( 'Page redirection', 'an-translate' )
 		),
 		'type' => 'radio',
 		'desc' => __( 'Would you like to use the Modal Box or redirect users to a custom page when adblock is detected? - Default: None', 'an-translate' ),
 		'default' => '1',
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Enable statistics Widget', 'an-translate' ),
+			'id' => 'an_option_stats',
+			'type' => 'select',
+			'desc' => __( 'If you have many page views, this option may cause server overload. You can disable it to make the plugin more lightweight - Default: Yes', 'an-translate' ) .'<br /> <strong class="an-red">'. __( 'Adblock Notify Stats widget is available on your admin dashboard (if not visible, go to the top menu and visit "Screen Options").', 'an-translate' ) .'</strong>',
+			'options' => array(
+					'1' => __( 'Yes', 'an-translate' ),
+					'2' => __( 'No', 'an-translate' ),
+			),
+			'default' => '1',
 	) );
 	$generalTab->createOption( array(
 			'name' => __( 'Cookies Options', 'an-translate' ),
@@ -123,7 +131,7 @@ function an_create_options() {
 				<p>'. __( 'We\'ve detected that you are using AdBlock Plus ore some other adblocking software which is preventing the page from fully loading.', 'an-translate' ) .'</p>
 				<p>'. __( 'We don\'t have any banner, Flash, animation, obnoxious sound, or popup ad. We do not implement these annoying types of ads!', 'an-translate' ) .'</p>
 				<p>'. __( 'We need money to operate the site, and almost all of it comes from our online advertising.', 'an-translate' ) .'</p> 
-				<p><strong>'. __( 'Please add', 'an-translate' ) .'<a title="http://b-website.com/" href="b-website.com" target="_blank">www.b-website.com</a> '. __( 'to your ad blocking whitelist or disable your adblocking software.', 'an-translate' ) .'<strong></p>
+				<p><strong>'. __( 'Please add', 'an-translate' ) .' <a title="' . get_bloginfo(name) . '" href="' . get_bloginfo(url) . '" target="_blank">' . preg_replace('#^https?://#', '', rtrim(get_bloginfo(url),'/')) . '</a> '. __( 'to your ad blocking whitelist or disable your adblocking software.', 'an-translate' ) .'<strong></p>
 			',
 	) );
 	$generalTab->createOption( array(
@@ -390,6 +398,7 @@ function an_create_options() {
 	
 		//General Options
 		$anOptionChoice = $an_option->getOption( 'an_option_choice' );
+		$anOptionStats = $an_option->getOption( 'an_option_stats' );
 		$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
 		$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
 		$anModalTitle = $an_option->getOption( 'an_modal_title' );

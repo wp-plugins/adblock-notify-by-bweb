@@ -8,6 +8,7 @@ function an_prepare(){
 	//Retrieve options
 	//General Options
 	$anOptionChoice = $an_option->getOption( 'an_option_choice' );
+	$anOptionStats = $an_option->getOption( 'an_option_stats' );
 	$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
 	$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
 	$anModalTitle = $an_option->getOption( 'an_modal_title' );
@@ -61,6 +62,7 @@ function an_prepare(){
 	$output .= 'var anOptions =' . 
 		json_encode(array(
 		'anOptionChoice' => $anOptionChoice,
+		'anOptionStats' => $anOptionStats,
 		'anOptionCookie' => $anOptionCookie,
 		'anOptionCookieLife' => $anOptionCookieLife,
 		'anModalTitle' => $anModalTitle, 
@@ -77,7 +79,6 @@ function an_prepare(){
 		'anAlternativeText' => do_shortcode($anAlternativeText),
 		'anAlternativeClone' => $anAlternativeClone,
 		'anAlternativeProperties' => $anAlternativeProperties,
-		'anGetUserIpAdress'=> $anGetUserIpAdress,
 		));
 	$output .= '/* ]]> */';
 	$output .= '</script>';
@@ -94,6 +95,7 @@ function an_prepare(){
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
+	$output = apply_filters( 'an_prepare', $output );
 	echo $output;
 
 }
@@ -381,6 +383,9 @@ function an_get_counters() {
 	$anCount = get_option('adblocker_notify_counter');
 
 	//prevent plugin's counter to be higher than the page counter if page is refreshed during the ajax call or if wordpress caching systeme in not badly configured
+	if($anCount['blocked'] > $anCount['total']){
+		$anCount['total'] = $anCount['blocked'];
+	}
 	if($anCount['history'][0]['blocked'] > $anCount['history'][0]['total']){
 		$anCount['history'][0]['total'] = $anCount['history'][0]['blocked'];
 	}
@@ -534,8 +539,11 @@ function an_get_counters() {
  * Register the Dashboard Widget display function
  ***************************************************************/
 function an_dashboard_widgets() {
-	global $wp_meta_boxes;
-	wp_add_dashboard_widget('an_dashboard_widgets', 'Adblock Notify Stats', 'an_get_counters');
+	$adBlockeNotify = unserialize(get_option( 'adblocker_notify_options'));
+	if( $adBlockeNotify['an_option_stats'] != 2 ) { 		
+		global $wp_meta_boxes;
+		wp_add_dashboard_widget('an_dashboard_widgets', 'Adblock Notify Stats', 'an_get_counters');
+	}
 }
 add_action('wp_dashboard_setup', 'an_dashboard_widgets');
 
