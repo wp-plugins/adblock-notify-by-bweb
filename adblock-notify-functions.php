@@ -663,7 +663,7 @@ add_action('admin_notices', 'an_error_admin_notices');
 /***************************************************************
  * Edit Titan Generated CSS
  ***************************************************************/
-function an_update_titan_css_selectors($file, $newSelectors){
+function an_update_titan_css_selectors($newSelectors){
 	
 	$uploadDir = wp_upload_dir();
 	$titanCssFile = trailingslashit( $uploadDir['basedir'] ) . 'titan-framework-adblocker_notify-css.css';
