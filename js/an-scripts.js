@@ -4,63 +4,45 @@
 	Copyright: (c) 2014 Brice CAPOBIANCO, b-website.com
 */
 
-
-
-//define global testing var
-var an_state = null;
-
-/*  Detection with JAVASCRIPT
-/* ------------------------------------ */	
-/*Script by elidickinson | https://github.com/elidickinson/ */
-function ad_block_test(a,b){if("undefined"!=typeof document.body){var c="0.1.2-dev",b=b?b:"sponsored-ad",d=document.createElement("DIV");d.id=b,d.style.position="absolute",d.style.left="-999px",d.appendChild(document.createTextNode("&nbsp;")),document.body.appendChild(d),setTimeout(function(){if(d){var b=0==d.clientHeight;try{}catch(e){}a(b,c),document.body.removeChild(d)}},175)}}
-
-//launch FIRST test
-function ad_block_test_callback(ads_blocked, abt_version_string) {
-	ad_state = ads_blocked;
-}
-ad_block_test(ad_block_test_callback);
-
-
-
 jQuery(document).ready(function($) {
-	//page count
-	an_blocker_counter('total');
+	//define global testing var
+	var $an_state = null;
 
-
-/*  Detection
-/* ------------------------------------ */	
+	/*  Detection
+	/* ------------------------------------ */	
 	$(window).load(function() {
-		//if( (getCookie('anCookie') !== 'true' && anOptions.anOptionCookie == 1) || (anOptions.anOptionCookie == 2 && anOptions.anOptionChoice == 2) || (anOptions.anOptionCookie == 2 && anOptions.anOptionChoice == 3) || anOptions.anAlternativeActivation == true){
+
 			setTimeout(function() {
 
-				//launch FIRST test no LINE 17 - return an_state 'true' or 'null'
-				
-				//launch SECOND test (js file) - check if advertisement is blocked or not
+				//launch FIRST test (js file) - check if advertisement is blocked or not
 				if ($.adblockJsFile === undefined){
-					an_state=true;
+					//$an_state=true;
 				}
-				
-				//launch THIRD test (jQeury) - check adsense element height
-				if ($('#adsense.an-sponsored').outerHeight() == 0){
-					an_state=true;
-					$('#adsense.an-sponsored').remove();					
+
+				//launch SECOND test (jQuery) - check adsense element height
+				if($an_state !== true){
+					if ($('#adsense.an-sponsored').outerHeight() == 0){
+						$an_state=true;
+						$('#adsense.an-sponsored').remove();					
+					}
 				}
-				
+
 				//do action
-				an_message_display(an_state);
-			}, 200);
-		//}
+				an_message_display($an_state);
+
+			}, 100);
+
 	});
+	
+	/*  Do action
+	/* ------------------------------------ */	
 
-/*  Do action
-/* ------------------------------------ */	
-
-	function an_message_display(an_state){
-		if(an_state === true ){ 		
+	function an_message_display($an_state){
+		if($an_state === true ){ 		
 
 			//IF MODAL BOX IS ACTIVATED
-			if ( anOptions.anOptionChoice == 2 && getCookie('anCookie') !== 'true' || anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 2) {
-				
+			if ( ( anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 1 && getCookie('anCookie') !== 'true' ) || ( anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 2 ) ) {
+
 				if(anOptions.anOptionModalBxtitle != ''){
 					var headingColor = 'style="color:'+ anOptions.anOptionModalBxtitle +'"';
 				} else {
@@ -166,22 +148,24 @@ jQuery(document).ready(function($) {
 				});
 				
 			};
-				
-			an_blocker_counter('blocked');											//adblocker detected
-			
+
+		an_blocker_counter(['total','blocked']); //adblocker detected
+
 		} else {
 			
 			//IF AD BLOCKER IS DEACTIVATED
-			if ( anOptions.anOptionChoice == 2 && getCookie('anCookie') == 'true' || anOptions.anOptionChoice == 3 && getCookie('anCookie') == 'true' ) {
-				
-				an_blocker_counter('deactivated');									//adblocker detected	
-				setCookie('anCookie', '', anOptions.anOptionCookieLife);			//set cookie to true
+			if ( getCookie('anCookie') == 'true') {
+				an_blocker_counter(['total','deactivated']);					//adblocker deactivated	
+				setCookie('anCookie', '', anOptions.anOptionCookieLife);		//set cookie to true
+			} else {
+				an_blocker_counter(['total']);									//no adblocker	
 			}
 
 		
 		}
 	
 	}
+
 
 //COUNT PAGE VIEWS WITH ADBLOCKER
 function an_blocker_counter(value){
@@ -193,6 +177,7 @@ function an_blocker_counter(value){
 		return false;
 	}
 };	
+
 
 
 
