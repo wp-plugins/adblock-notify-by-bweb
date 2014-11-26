@@ -13,7 +13,7 @@ function an_create_options() {
 	 ***************************************************************/
 	$an_panel = $an_option->createAdminPanel( array(
 			'name' => AN_NAME, 
-			'icon' => AN_URL . 'img/icon_bweb.png',
+			'icon' => AN_URL . 'img/icon-bweb.png',
 			'id' => AN_ID,
 	) );
 	
@@ -27,20 +27,21 @@ function an_create_options() {
 	$modalTab = $an_panel->createTab( array(
 		'name' => __( 'Modal Visual Options', 'an-translate' ),
 	) );
+	$redirectTab = $an_panel->createTab( array(
+		'name' => __( 'Redirection Options', 'an-translate' ),
+	) );
 	$alternativeTab = $an_panel->createTab( array(
 		'name' => __( 'Alternative Message', 'an-translate' ),
 	) );
-	
 	
 	/***************************************************************
 	 * Create tab's options
 	 ***************************************************************/
 	//Adblock Notify Options
 	$generalTab->createOption( array(
-		'type' => 'note',
+		'name' => '<h3 class="home">'. __( 'Welcome to Adblock Notify Plugin', 'an-translate' ) .'</h3>',
 		'desc' => '
 				<div style="color:black; font-style: normal;">
-					<h3>'. __( 'Welcome to Adblock Notify Plugin', 'an-translate' ) .'</h3>
 					<p>
 						'. __( 'You can notify users with an activated Adblocker software by one of THREE ways !', 'an-translate' ) .'
 						<ol>
@@ -61,6 +62,7 @@ function an_create_options() {
 					</p>
 				</div>
 		',
+		'type' => 'note'
 	) );
 	$generalTab->createOption( array( 
 		'name' => __( 'Modal Box or Redirection ?', 'an-translate' ),
@@ -111,17 +113,36 @@ function an_create_options() {
 			'step' => '1',
 	) );
 	$generalTab->createOption( array(
-			'name' =>  __( 'Modal Box Options', 'an-translate' ),
+			'name' => '<strong class="an-red">BETA</strong> ' . __( 'Random selectors and files', 'an-translate' ),
 			'type' => 'heading',
 	) );
 	$generalTab->createOption( array(
+			'name' => __( 'Use random selectors and files', 'an-translate' ),
+			'id' => 'an_option_selectors',
+			'type' => 'checkbox',
+			'desc' => __( 'Random selectors and files name to prevent adblock to block the plugin. Temp files with new selectors will be generated and stored in a temp folder in your /uploads directory  - Default: Unchecked', 'an-translate' ),
+			'default' => false,
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Flush files', 'an-translate' ),
+			'id' => 'an_option_flush',
+			'type' => 'checkbox',
+			'desc' => __( 'Will recreate the selectors and temps files on options saved.', 'an-translate' ),
+			'default' => false,
+	) );
+	//Modal Visual Options
+	$modalTab->createOption( array(
+			'name' =>  __( 'Modal Box Options', 'an-translate' ),
+			'type' => 'heading',
+	) );
+	$modalTab->createOption( array(
 			'name' =>  __( 'Modal Title', 'an-translate' ),
 			'id' => 'an_modal_title',
 			'type' => 'text',
 			'desc' =>  __( 'The title of the modal box', 'an-translate' ),
 			'default' =>  __( 'Adblocker detected! Please consider reading this notice.', 'an-translate' ),
 	) );
-	$generalTab->createOption( array(
+	$modalTab->createOption( array(
 			'name' =>  __( 'Modal Text', 'an-translate' ),
 			'id' => 'an_modal_text',
 			'type' => 'editor',
@@ -134,35 +155,6 @@ function an_create_options() {
 				<p><strong>'. __( 'Please add', 'an-translate' ) .' <a title="' . get_bloginfo(name) . '" href="' . get_bloginfo(url) . '" target="_blank">' . preg_replace('#^https?://#', '', rtrim(get_bloginfo(url),'/')) . '</a> '. __( 'to your ad blocking whitelist or disable your adblocking software.', 'an-translate' ) .'<strong></p>
 			',
 	) );
-	$generalTab->createOption( array(
-			'name' =>  __( 'Redirection Options', 'an-translate' ),
-			'type' => 'heading',
-	) );
-	$generalTab->createOption( array(
-			'name' =>  __( 'Target Page', 'an-translate' ),
-			'id' => 'an_page_redirect',
-			'type' => 'select-pages',
-			'desc' =>  __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
-	) );
-	$generalTab->createOption( array(
-			'name' =>  __( 'No JS Redirection', 'an-translate' ) .' <span class="blink an-red">'. __( 'Warning', 'an-translate' ) .'</span>',
-			'type' => 'heading',
-	) );
-	$generalTab->createOption( array(
-		'name' => __( 'Redirect if no JS detected?', 'an-translate' ),
-		'id' => 'an_page_nojs_activation',
-		'type' => 'checkbox',
-		'desc' => __( 'Yes', 'an-translate' ) .'  <i>('. __( 'This option used your Cookies Options', 'an-translate' ) .')</i> - '. __( 'Default: Unchecked', 'an-translate' ) .'<br /><strong class="an-red">'. __( 'Will redirect visitor to a custom page if Javascript is disable. It is NOT SEO friendly, use it only on private site.', 'an-translate' ) .'</strong>',
-		'default' => false,
-	) );
-	$generalTab->createOption( array(
-			'name' => __( 'Target Page', 'an-translate' ),
-			'id' => 'an_page_nojs_redirect',
-			'type' => 'select-pages',
-			'desc' => __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
-	) );
-	
-	//Modal Visual Options
 	$modalTab->createOption( array(
 		'name' => __( 'Modal Box Settings', 'an-translate' ),
 		'type' => 'heading',
@@ -246,17 +238,42 @@ function an_create_options() {
 		'name' => __( 'Custom CSS', 'an-translate' ) .' <br /><i>('. __( 'Advance users', 'an-translate' ) .')<i>',
 		'id' => 'an_option_modal_custom_css',
 		'type' => 'code',
-		'desc' => __( 'Put your custom CSS rules here. Modal Box ID is', 'an-translate' ) .' <strong class="an-red">#an-Modal</strong>',
+		'desc' => __( 
+			'Put your custom CSS rules here. Modal Box ID is', 'an-translate' ) .' <strong class="an-red">#an-Modal</strong>
+			<br /><br /><strong class="an-red">' . __( 'This selector will be changed during settings update by a random new one to prevent adblock to hide this element. All the CSS and JS files are parsed to be updated with this new selectors. That is why you have to add your custom style in the above field and not in you theme stylesheet.', 'an-translate' ) . '</strong>',
 		'lang' => 'css',
 	) );
 	
+	//Redirection Options
+	$redirectTab->createOption( array(
+			'name' =>  __( 'Target Page', 'an-translate' ),
+			'id' => 'an_page_redirect',
+			'type' => 'select-pages',
+			'desc' =>  __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
+	) );
+	$redirectTab->createOption( array(
+			'name' =>  __( 'No JS Redirection', 'an-translate' ) .' <span class="blink an-red">'. __( 'Warning', 'an-translate' ) .'</span>',
+			'type' => 'heading',
+	) );
+	$redirectTab->createOption( array(
+		'name' => __( 'Redirect if no JS detected?', 'an-translate' ),
+		'id' => 'an_page_nojs_activation',
+		'type' => 'checkbox',
+		'desc' => __( 'Yes', 'an-translate' ) .'  <i>('. __( 'This option used your Cookies Options', 'an-translate' ) .')</i> - '. __( 'Default: Unchecked', 'an-translate' ) .'<br /><strong class="an-red">'. __( 'Will redirect visitor to a custom page if Javascript is disable. It is NOT SEO friendly, use it only on private site.', 'an-translate' ) .'</strong>',
+		'default' => false,
+	) );
+	$redirectTab->createOption( array(
+			'name' => __( 'Target Page', 'an-translate' ),
+			'id' => 'an_page_nojs_redirect',
+			'type' => 'select-pages',
+			'desc' => __( 'Select a page to redirect to. List your current published pages', 'an-translate' ),
+	) );
 	
 	//Alternative Message Options
 	$alternativeTab->createOption( array(
-		'type' => 'note',
+		'name' => '<h3>'. __( 'Alternative Message', 'an-translate' ) .'</h3>',
 		'desc' => '
 				<div style="color:black; font-style: normal;">
-					<h3>'. __( 'Alternative Message', 'an-translate' ) .'</h3>
 					<p>
 						'. __( 'You can insert a custom message where your hidden ads would normally appear.', 'an-translate' ) .'
 					</p><p>
@@ -266,6 +283,7 @@ function an_create_options() {
 					</p>
 				</div>
 		',
+		'type' => 'note'
 	) );
 	$alternativeTab->createOption( array(
 		'name' => __( 'Activate this option?', 'an-translate' ),
@@ -363,6 +381,7 @@ function an_create_options() {
 					<p>
 					<strong> '. __( 'NOTE:', 'an-translate' ) .'</strong>  '. __( 'If you\'ve activated the ads containers cloning, you can still add custom CSS on your text.', 'an-translate' ) .'
 					<br /> '. __( 'If you really have to overload .an-alternative with your own CSS properties, you may probably need to use !important after each of them, but this is not advised.', 'an-translate' ) .'
+					<br /><br /><strong class="an-red">' . __( 'This selector will be changed during settings update by a random new one to prevent adblock to hide this element. All the CSS and JS files are parsed to be updated with this new selectors. That is why you have to add your custom style in the above field and not in you theme stylesheet.', 'an-translate' ) . '</strong>
 					</p>',
 		'lang' => 'css',
 	) );
@@ -383,50 +402,17 @@ function an_create_options() {
 		'reset' => __( 'Reset to Defaults', 'an-translate' ),
 	) );
 	
+	$redirectTab->createOption( array(
+		'type' => 'save',
+		'save' => __( 'Save Changes', 'an-translate' ),
+		'reset' => __( 'Reset to Defaults', 'an-translate' ),
+	) );
+	
 	$alternativeTab->createOption( array(
 		'type' => 'save',
 		'save' => __( 'Save Changes', 'an-translate' ),
 		'reset' => __( 'Reset to Defaults', 'an-translate' ),
 	) );
 	
-	
-	/***************************************************************
-	 * Launch options framework instance
-	 ***************************************************************/ 
-	function an_save_setting_data() {
-		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
-	
-		//General Options
-		$anOptionChoice = $an_option->getOption( 'an_option_choice' );
-		$anOptionStats = $an_option->getOption( 'an_option_stats' );
-		$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
-		$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
-		$anModalTitle = $an_option->getOption( 'an_modal_title' );
-		$anModalText = $an_option->getOption( 'an_modal_text' );
-		$anPageRedirect = $an_option->getOption( 'an_page_redirect' );
-		$anPageNojsActivation = $an_option->getOption( 'an_page_nojs_activation' );
-		$anPageNojsRedirect = $an_option->getOption( 'an_page_nojs_redirect' );
-	
-		//Modal Options
-		$anOptionModalEffect = $an_option->getOption( 'an_option_modal_effect' );
-		$anOptionModalSpeed = $an_option->getOption( 'an_option_modal_speed' );
-		$anOptionModalClose = $an_option->getOption( 'an_option_modal_close' );
-		$anOptionModalBgcolor = $an_option->getOption( 'an_option_modal_bgcolor' );
-		$anOptionModalBgopacity = $an_option->getOption( 'an_option_modal_bgopacity' );
-		$anOptionModalBxcolor = $an_option->getOption( 'an_option_modal_bxcolor' );
-		$anOptionModalBxtitle = $an_option->getOption( 'an_option_modal_bxtitle' );
-		$anOptionModalBxtext = $an_option->getOption( 'an_option_modal_bxtext' );
-		$anOptionModalCustomCSS = $an_option->getOption( 'an_option_modal_custom_css' );
-	
-		//Modal Options
-		$anAlternativeActivation = $an_option->getOption( 'an_alternative_activation' );
-		$anAlternativeElement = $an_option->getOption( 'an_alternative_elements' );
-		$anAlternativeText = $an_option->getOption( 'an_alternative_text' );
-		$anAlternativeClone = $an_option->getOption( 'an_alternative_clone' );
-		$anAlternativeProperties = $an_option->getOption( 'an_alternative_properties' );
-		$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
-	
-	}
-	add_action('wp_head' , 'an_save_setting_data' );
 	
 } //en of an_create_options

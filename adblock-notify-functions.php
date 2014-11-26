@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  * Insert elements in the DOM : HTML & SCRIPT
  ***************************************************************/
@@ -9,6 +10,7 @@ function an_prepare(){
 	//General Options
 	$anOptionChoice = $an_option->getOption( 'an_option_choice' );
 	$anOptionStats = $an_option->getOption( 'an_option_stats' );
+	$anOptionSelectors = $an_option->getOption( 'an_option_selectors' );
 	$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
 	$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
 	$anModalTitle = $an_option->getOption( 'an_modal_title' );
@@ -37,7 +39,7 @@ function an_prepare(){
 	$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
 	
 	//remove cookie if deactivate
-	an_remove_cookie(AN_COOKIE, $anOptionCookie);
+	//an_remove_cookie(AN_COOKIE, $anOptionCookie);
 	
 	//redirect URL with JS
 	$anPermalink = an_url_redirect($anPageRedirect);
@@ -50,35 +52,42 @@ function an_prepare(){
 	//Style construct
 	//Overlay RGA color
 	$anOptionModalOverlay = hex2rgba($anOptionModalBgcolor, $anOptionModalBgopacity/100);
+
+	//Load random selectors
+	$anSelectors = unserialize( get_option( 'adblocker_notify_selectors' ) );
 	
 	//DOM and Json
-	$output .= '<div id="an-Modal" class="reveal-modal" ';
+	if($anOptionSelectors == false  || ( !ini_get('allow_url_fopen') && !function_exists('curl_init') ) ) {
+		$output .= '<div id="an-Modal" class="reveal-modal" ';
+	} else {
+		$output .= '<div id="' . $anSelectors['selectors'][0] . '" class="' . $anSelectors['selectors'][1] . '" ';
+	}
 	$output .= 'style="background:'. $anOptionModalBxcolor .';';
 	if(!empty($anOptionModalBxtext))
 	$output .= 'color:'. $anOptionModalBxtext;
-	$output .= '"></div>';
+	$output .= '"></div>   ';
 	$output .= '<script type="text/javascript">';
 	$output .= '/* <![CDATA[ */';
 	$output .= 'var anOptions =' . 
 		json_encode(array(
-		'anOptionChoice' => $anOptionChoice,
-		'anOptionStats' => $anOptionStats,
-		'anOptionCookie' => $anOptionCookie,
-		'anOptionCookieLife' => $anOptionCookieLife,
-		'anModalTitle' => $anModalTitle, 
-		'anModalText' => do_shortcode($anModalText), 
-		'anPageRedirect' => $anPageRedirect, 
-		'anPermalink' => $anPermalink,
-		'anOptionModalEffect' => $anOptionModalEffect, 
-		'anOptionModalspeed' => $anOptionModalSpeed, 
-		'anOptionModalclose' => $anOptionModalClose,
-		'anOptionModalOverlay' => $anOptionModalOverlay,
-		'anOptionModalBxtitle' => $anOptionModalBxtitle,
-		'anAlternativeActivation' => $anAlternativeActivation, 
-		'anAlternativeElement' => $anAlternativeElement, 
-		'anAlternativeText' => do_shortcode($anAlternativeText),
-		'anAlternativeClone' => $anAlternativeClone,
-		'anAlternativeProperties' => $anAlternativeProperties,
+			'anOptionChoice' => $anOptionChoice,
+			'anOptionStats' => $anOptionStats,
+			'anOptionCookie' => $anOptionCookie,
+			'anOptionCookieLife' => $anOptionCookieLife,
+			'anModalTitle' => $anModalTitle, 
+			'anModalText' => do_shortcode($anModalText), 
+			'anPageRedirect' => $anPageRedirect, 
+			'anPermalink' => $anPermalink,
+			'anOptionModalEffect' => $anOptionModalEffect, 
+			'anOptionModalspeed' => $anOptionModalSpeed, 
+			'anOptionModalclose' => $anOptionModalClose,
+			'anOptionModalOverlay' => $anOptionModalOverlay,
+			'anOptionModalBxtitle' => $anOptionModalBxtitle,
+			'anAlternativeActivation' => $anAlternativeActivation, 
+			'anAlternativeElement' => $anAlternativeElement, 
+			'anAlternativeText' => do_shortcode($anAlternativeText),
+			'anAlternativeClone' => $anAlternativeClone,
+			'anAlternativeProperties' => $anAlternativeProperties,
 		));
 	$output .= '/* ]]> */';
 	$output .= '</script>';
@@ -91,11 +100,15 @@ function an_prepare(){
 		
 		if($anNojsPermalink != "undefined"){
 			//Set new cookie value	
-			an_nojs_cookie($expiration);		
+			//an_nojs_cookie($expiration);		
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
+	
+	$output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
+
 	$output = apply_filters( 'an_prepare', $output );
+	
 	echo $output;
 
 }
@@ -103,10 +116,38 @@ add_action('wp_footer', 'an_prepare');
 
 
 /***************************************************************
+ * Dealing with cookies before page load to 
+ * prevent Header already sent notice
+ ***************************************************************/
+function an_cookies_init(){
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+	
+	$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
+	$anPageNojsActivation = $an_option->getOption( 'an_page_nojs_activation' );
+	$anPageNojsRedirect = $an_option->getOption( 'an_page_nojs_redirect' );
+
+	if(!empty($anPageNojsActivation) && !$_COOKIE[AN_COOKIE]) {
+		//redirect URL with NO JS
+		$anNojsPermalink = an_url_redirect($anPageNojsRedirect);
+		
+		if($anNojsPermalink != "undefined"){
+			//Set new cookie value	
+			an_nojs_cookie($expiration);
+		}
+	}
+	
+	//remove cookie if deactivate
+	an_remove_cookie(AN_COOKIE, $anOptionCookie);
+
+}
+add_action( 'init', 'an_cookies_init' );
+
+
+/***************************************************************
  * Deregister custom stylesheet if option is empty 
  ***************************************************************/
 function an_deregister_styles() {
-	$anBlockerNotify = unserialize(get_option( 'adblocker_notify_options'));
+	$anBlockerNotify = unserialize( get_option( 'adblocker_notify_options') );
 
 	if(empty($anBlockerNotify['an_option_modal_custom_css']) && empty($anBlockerNotify['an_alternative_custom_css'])){ 
 		wp_deregister_style( 'tf-compiled-options-adblocker_notify' );
@@ -114,16 +155,6 @@ function an_deregister_styles() {
 
 }
 add_action( 'wp_print_styles', 'an_deregister_styles', 100);
-
-
-/***************************************************************
- * Append fake ad to Wordpress content
- ***************************************************************/
-function an_fake_an_content($content) {
-	$content .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
-	return $content;
-}
-add_filter( 'the_content', 'an_fake_an_content' );
 
 
 /***************************************************************
@@ -148,10 +179,10 @@ function an_url_redirect($pageId){
 
 
 /***************************************************************
- * Remove cookie when option is disabled
+ * Remove cookie when option is disabled 
  ***************************************************************/
 function an_remove_cookie($cookieName, $anOptionCookie){
-	if (isset($_COOKIE[$cookieName]) && $anOptionCookie != 1) {
+	if ( ( isset($_COOKIE[$cookieName]) && $anOptionCookie == 2 ) || ( isset($_COOKIE[$cookieName]) && $anOptionCookie == '2' ) ) {
 		unset($_COOKIE[$cookieName]);
 		setcookie($cookieName, null, -1, '/');
 	}
@@ -269,25 +300,31 @@ function hex2rgba($color, $opacity = false) {
 /***************************************************************
  * Page views & page blocked counter
  ***************************************************************/
+
 function an_adblock_counter() {
 	if ( current_user_can( 'manage_options' ) || empty ($_POST['an_state']))
 	return;
 	
+	$an_states = $_POST['an_state'];
 	$anCount = get_option('adblocker_notify_counter');
-	if(empty($anCount)){
-		add_option('adblocker_notify_counter', array('total' => 0, 'blocked' => 0, 'deactivated' => 0, 'history' => array()));
-		$anCount = get_option('adblocker_notify_counter');
+	
+	foreach ($an_states as $an_state){
+		if(empty($anCount)){
+			$anCount = array('total' => 0, 'blocked' => 0, 'deactivated' => 0, 'history' => array());
+			add_option('adblocker_notify_counter', $anCount);
+		}
+	
+		//update option with new values
+		$anCount[$an_state]++;
+	
+		//then update history
+		$anCount = an_history_counter($an_state, $anCount);
+		
 	}
-	$an_state = $_POST['an_state'];
-
-	//update option with new values
-	$anCount[$an_state]++;
-
+	
 	//update db	
 	update_option('adblocker_notify_counter', $anCount);
-
-	//then update history
-	an_history_counter($an_state);
+	
 
 	exit;
 }
@@ -309,15 +346,13 @@ function an_date_diff($toDay, $toCheck){
 /***************************************************************
  * Page history counter
  ***************************************************************/
-function an_history_counter($val=null) {
-	$anCount = get_option( 'adblocker_notify_counter' );
+function an_history_counter($val=null, $anCount) {
 	$anToday = date( 'Y-m-d', current_time( 'timestamp', 0 ) );
 	//$anToday = date( 'Y-m-d', strtotime( '3 day', strtotime( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) ) ) );
 	
 	if(empty($anCount['history'][0])){
 
 		$anCount['history'][0] = array('date' => $anToday, 'total' => $anCount['total'], 'blocked' => $anCount['blocked']);
-		update_option('adblocker_notify_counter', $anCount);
 	
 	} else {
 		
@@ -353,9 +388,9 @@ function an_history_counter($val=null) {
 			}
 
 		} 
-
-		update_option('adblocker_notify_counter', $anCount);
 	}
+	
+	return $anCount;
 
 }
 
@@ -363,15 +398,14 @@ function an_history_counter($val=null) {
 /***************************************************************
  * Data history extraction & order revert for chart
  ***************************************************************/
-function an_data_histoty($val=null){
+function an_widget_data_histoty($val=null){
 	$anCount = get_option( 'adblocker_notify_counter' );
 	if(empty($anCount['history'][0]))
 	return;
 
 	foreach($anCount['history'] as $row){
-		$anOutput .= $row[$val].',';
+		$anOutput[] = $row[$val];
 	}
-	$anOutput = trim($anOutput, ",");
 	return $anOutput;
 }
 
@@ -381,6 +415,12 @@ function an_data_histoty($val=null){
  ***************************************************************/
 function an_get_counters() {
 	$anCount = get_option('adblocker_notify_counter');
+	
+	if(empty($anCount)) {
+		echo '<p>No data</p>';
+		return $output;
+	}
+
 
 	//prevent plugin's counter to be higher than the page counter if page is refreshed during the ajax call or if wordpress caching systeme in not badly configured
 	if($anCount['blocked'] > $anCount['total']){
@@ -425,7 +465,7 @@ function an_get_counters() {
 	$output .= '
 		<table class="an-stats-table">
 			<tr class="an-top">
-			  <td></td>
+			  <td><a href="#" class="antooltip" data-antooltip="'. __( 'Admins are excluded from this statistics.', 'an-translate' ) .'"><span class="dashicons dashicons-info"></span></a></td>
 			  <td>'. __( 'Total', 'an-translate' ) .'</td> 
 			  <td>'. __( 'Today', 'an-translate' ) .'</td>
 			</tr>
@@ -452,85 +492,31 @@ function an_get_counters() {
 		</div>
 		<p>
 			<strong>' . $anCount['deactivated'] . '</strong> '. __( 'Ad Blocker software deactivated', 'an-translate' ) .'
-			<br />
-			<i>'. __( 'You may probably increase this number by improving your custom messages', 'an-translate' ) .'</i>
+			<a href="#" class="antooltip" data-antooltip="'. __( 'You may probably increase this number by improving your custom messages', 'an-translate' ) .'."><span class="dashicons dashicons-info"></span></a>
 		</p>
 		<div id="an-canvas-container-line">
 			<canvas id="an-canvas-line"></canvas>
 		</div>
 		<p>
-			<a href="options-general.php?page='.AN_ID.'" class="button action">'. __( 'Settings', 'an-translate' ) .'</a>
+			<a href="options-general.php?page='.AN_ID.'" class="button button button-primary action">'. __( 'Settings', 'an-translate' ) .'</a>
 			&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp
 			<a href="options-general.php?page='.AN_ID.'&an-reset=true"  onclick="javascript:if(!confirm(\''. __( 'Are you sure you want to delete permanently your datas?', 'an-translate' ) .'\')) return false;" class="button action">'. __( 'Reset Stats', 'an-translate' ) .'</a>
-		</p>
-		<i>'. __( 'Admins are excluded from this statistics.', 'an-translate' ) .'</i>
+		</p>';
 	
-		<style>
-			#an_dashboard_widgets i {color:#bbb; font-size: 0.85em}
-			.an-stats-table {width: 100%;}
-			.an-stats-table, .an-stats-table td, .an-stats-table th {border: 1px solid #f8f8f8;border-collapse:collapse;}
-			.an-top {background-color: #f8f8f8;}
-			.an-canvas-container-donut {width:50%; float: left; position:relative;}
-			.an-canvas-container-donut,#an_dashboard_widgets .inside{text-align:center}
-			#an-canvas-donut,#an-canvas-donut-today {display:inline-block; margin-top:10px;}
-			.an-average{position:absolute;left:50%;top:77px;font-size:1.45em;font-weight:700;display:inline-block;width:85px;text-align:center;margin-left:-43px}
-			.an-average span {text-align: center; font-size: .5em; display: block; height: 12px; line-height: 12px;}
-			#an-canvas-container-line{margin-top:5px;width:100%}
-		</style>
-		<script type="text/javascript">
-		var doughnutData = [
-				{
-					value: '.$totalNoBlocker.',
-					color:"#34495e"
-				},
-				{
-					value : '.$anCount['blocked'].',
-					color : "#e74c3c"
-				}			
-			];
-		var doughnutDataToday = [
-				{
-					value: '.$totalNoBlockerToday.',
-					color:"#34495e"
-				},
-				{
-					value : '.$anCount['history'][0]['blocked'].',
-					color : "#e74c3c"
-				}			
-			];
-		
-		var lineChartData = {
-			labels : ["Today","Day -1","Day -2","Day -3","Day -4","Day -5","Day -6"],
-			datasets : [
-				{
-					fillColor : "rgba(50, 82, 110,0.5)",
-					strokeColor : "rgba(50, 82, 110,0.8)",
-					pointColor : "rgba(250,250,250,1)",
-					pointStrokeColor : "rgba(50, 82, 110,1)",
-					data : ['. an_data_histoty('total') .']
-				},
-				{
-					fillColor : "rgba(231, 76, 60,0.6)",
-					strokeColor : "rgba(173, 52, 40,0.8)",
-					pointColor : "rgba(250,250,250,0.8)",
-					pointStrokeColor : "#e74c3c",
-					data : ['. an_data_histoty('blocked') .']
-				}
-			]			
-		}
-		jQuery(document).ready(function($) {
-			var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
-			var widthdonut = $("#an_dashboard_widgets .inside .an-canvas-container-donut").width();
-			var widthline = $("#an_dashboard_widgets .inside").width();
-			$("canvas").attr("width",widthdonut);
-			$("canvas#an-canvas-line").attr("width",widthline);
-			var myDoughnut = new Chart(document.getElementById("an-canvas-donut").getContext("2d")).Doughnut(doughnutData);
-			var myDoughnut = new Chart(document.getElementById("an-canvas-donut-today").getContext("2d")).Doughnut(doughnutDataToday);
-			var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
-		});
+	$output .= '<script type="text/javascript">';
+	$output .= '/* <![CDATA[ */';
+	$output .= 'var anWidgetOptions =' . 
+		json_encode(array(
+			'totalNoBlocker' => $totalNoBlocker,
+			'anCountBlocked' => $anCount['blocked'],
+			'totalNoBlockerToday' => $totalNoBlockerToday,
+			'anCountBlockedHistory' => $anCount['history'][0]['blocked'],
+			'anDataHistotyTotal' => an_widget_data_histoty('total'), 
+			'anDataHistotyBlocked' => an_widget_data_histoty('blocked'), 
+		));
+	$output .= '/* ]]> */';
+	$output .= '</script>';
 
-		</script>
-	';
 	echo $output;
 }
  
@@ -539,11 +525,17 @@ function an_get_counters() {
  * Register the Dashboard Widget display function
  ***************************************************************/
 function an_dashboard_widgets() {
-	$adBlockeNotify = unserialize(get_option( 'adblocker_notify_options'));
-	if( $adBlockeNotify['an_option_stats'] != 2 ) { 		
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+
+	if( $an_option->getOption( 'an_option_stats' ) != 2 ) { 		
 		global $wp_meta_boxes;
-		wp_add_dashboard_widget('an_dashboard_widgets', 'Adblock Notify Stats', 'an_get_counters');
+		wp_add_dashboard_widget('an_dashboard_widgets', '<img src="' . AN_URL . 'img/icon-bweb.svg" class="bweb-logo" alt="b*web"/>&nbsp;&nbsp;'. __( 'Adblock Notify Stats', 'an-translate' ), 'an_get_counters');
+ 		//Chart JS
+    	wp_enqueue_script( 'an_chart_js', AN_URL . 'lib/chart-js/Chart.min.js', array( 'jquery' ),  NULL);
+   		//CSS & JS
+		add_action( 'admin_enqueue_scripts', 'an_register_admin_scripts' );
 	}
+	
 }
 add_action('wp_dashboard_setup', 'an_dashboard_widgets');
 
@@ -567,3 +559,259 @@ function an_reset_stats() {
 	}
 }
 add_filter('admin_head', 'an_reset_stats' );
+
+
+/***************************************************************
+ * Generate random selector or file name
+ ***************************************************************/
+function an_random_slug() {
+	$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+	$prefix = array();
+	$alphaLength = strlen($alphabet) - 1;
+	for ($i = 0; $i < 12; $i++) {
+		$n = rand(0, $alphaLength);
+		$prefix[] = $alphabet[$n];
+	}
+	return implode($prefix);
+}
+
+
+/***************************************************************
+ * Create new Style and Script files in a temp directory
+ ***************************************************************/
+function an_change_files_css_selectors($tempFolderPath, $tempFolderURL, $file, $oldFileName=null, $newFileName, $newSelectors, $content=''){
+
+	//Get default css and js files
+	$fileExt = pathinfo($file, PATHINFO_EXTENSION);
+	$fileContent = file_get_contents($file) . $content;
+	
+	//Replace default selectors with new ones
+	$defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
+	$fileContent = str_replace($defaultSelectors, $newSelectors, $fileContent);
+
+	//Load WP_Filesystem API
+	WP_Filesystem();
+	global $wp_filesystem;
+
+	//Verify that we can create the file
+	if ( $wp_filesystem->exists( $tempFolderPath.$oldFileName ) ) {
+		if ( ! $wp_filesystem->is_writable( $tempFolderPath.$oldFileName ) ) {
+			return false;
+		}
+		if ( ! $wp_filesystem->is_readable( $tempFolderPath.$oldFileName ) ) {
+			return false;
+		}
+	}
+	//Verify directory
+	$uploadDir = wp_upload_dir();
+	if ( ! $wp_filesystem->is_dir( $uploadDir['basedir'] ) ) {
+		return false;
+	}
+	if ( ! $wp_filesystem->is_writable( $uploadDir['basedir'] ) ) {
+		return false;
+	}
+		
+	//Creat new dir and files
+	if ( $wp_filesystem->is_dir( $tempFolderPath ) ) {
+		array_map('unlink', glob( $tempFolderPath . '*.' . $fileExt) );
+	} else {
+		$wp_filesystem->mkdir( $tempFolderPath );
+	}
+	$wp_filesystem->put_contents( $tempFolderPath . $newFileName . '.' . $fileExt, $fileContent, 0644 );
+	$file = $tempFolderURL . $newFileName . '.' . $fileExt;
+	
+	return $newFileName . '.' . $fileExt;
+}
+
+
+/***************************************************************
+ * Save scripts and styles with new random selectors after saving Titan Options
+ ***************************************************************/ 
+function an_save_setting_random_selectors() {
+
+	$an_option = unserialize( get_option( 'adblocker_notify_options' ) );
+	
+	//Define new temp path
+	$uploadDir = wp_upload_dir();
+	$tempFolderPath = trailingslashit( $uploadDir['basedir'] ) . 'an-temp/';
+	$tempFolderURL = trailingslashit( $uploadDir['baseurl'] ) . 'an-temp/';
+
+	//Define new selectors
+	$newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
+				
+	if($an_option['an_option_selectors'] == true ){
+		
+		if( ini_get('allow_url_fopen') ) {
+	
+			//Flush semectors
+			if($an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ){
+				
+				//Retrieve old files infos
+				$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+			
+				//Generate new css and js files
+				$titanCssContent = an_update_titan_css_selectors($newSelectors);
+				$newCSS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'css/an-style.min.css', $anScripts['files']['css'], an_random_slug(), $newSelectors, $titanCssContent );
+				$newJS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'js/an-scripts.min.js', $anScripts['files']['js'], an_random_slug(), $newSelectors );
+				
+				//Upload dir and temp dir are not writable
+				if($newCSS == false || $newJS== false){
+					$tempFolderPath = false;
+				}
+
+				//Store data
+				$newFiles = array( 
+					'temp-path' => $tempFolderPath,
+					'temp-url' => $tempFolderURL,
+					'files'=> array( 
+						'css'=> $newCSS, 
+						'js' => $newJS
+					), 
+					'selectors' => $newSelectors 
+				);
+
+				update_option('adblocker_notify_selectors', serialize($newFiles));
+
+			}
+			
+		}
+			
+
+		//remove option flush
+		$an_option['an_option_flush'] = false;
+		update_option( 'adblocker_notify_options', serialize($an_option));
+	
+	} else {
+		
+		// Remove temp files
+		an_delete_temp_folder($tempFolderPath);
+			
+	}
+	
+}
+add_action('tf_admin_options_saved_adblocker_notify', 'an_save_setting_random_selectors',99);
+
+
+/***************************************************************
+ * Admin Panel notice if wrong CHMOD on "wp-content/uploads"
+ ***************************************************************/
+function an_error_admin_notices() {
+    $screen = get_current_screen();
+    if ( $screen->id != 'toplevel_page_'. AN_ID )
+        return;
+
+	$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+
+	if(!empty($anScripts) && $anScripts['temp-path'] == false) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: There was an error creating Adblock Notify CSS and JS files. Upload directory is not writable. Please CHMOD "wp-content/uploads" to 0777', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;
+					[ <a href="http://codex.wordpress.org/Changing_File_Permissions" target="_blank" title="Changing File Permissions"> Changing File Permissions</a> ]
+				</p>
+				<p>'. __( 'Don\'t worry, we thought about it. Adblock Notify will print the scripts directly in your DOM, but for performance purpose it is recommended to change your uploads directory CHMOD!', 'an-translate' ) .'</p>
+			</div>
+		';
+	}
+	
+	if(!ini_get('allow_url_fopen') && function_exists('curl_init')) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: This plugin requires "allow_url_fopen" to be activated, but it is disabled in the server configuration. The plugin will not work properly if you don\'t turn it on!', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;</p>
+				<p>'. __( 'To enable this functionality, use a text editor to modify the allow_url_fopen directive in the php.ini file as follows: ', 'an-translate' ) .' <i>allow_url_fopen = on</i></p>
+			</div>
+		';
+	}
+
+	if(!ini_get('allow_url_fopen') && !function_exists('curl_init')) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: This plugin requires "allow_url_fopen" to be activated or at least CURL to run in defect mode, but they are disabled in the server configuration. The plugin will not work properly if you don\'t turn allow_url_fopen" on!', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;</p>
+				<p>'. __( 'To enable this functionality, use a text editor to modify the allow_url_fopen directive in the php.ini file as follows: ', 'an-translate' ) .' <i>allow_url_fopen = on</i></p>
+			</div>
+		';
+	}
+
+}
+add_action('admin_notices', 'an_error_admin_notices');
+
+
+/***************************************************************
+ * Edit Titan Generated CSS
+ ***************************************************************/
+function an_update_titan_css_selectors($newSelectors){
+	
+	$uploadDir = wp_upload_dir();
+	$titanCssFile = trailingslashit( $uploadDir['basedir'] ) . 'titan-framework-adblocker_notify-css.css';
+	
+	//Get TitanFramework style
+	$fileContent = file_get_contents($titanCssFile);
+
+	//Remove TitanFramework Generated Style
+	unlink(trailingslashit( $uploadDir['basedir'] ) . 'titan-framework-adblocker_notify-css.css');
+
+	return $fileContent;
+	
+}
+
+
+/***************************************************************
+ * Get files content with curl if fopen disable on server
+ ***************************************************************/
+function an_curl_file_get_contents($url) {
+	//function_exists('curl_init')
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+	
+    return $output;
+}
+
+
+/***************************************************************
+ * Print Style & Sripts if temp dir. is not writable
+ ***************************************************************/
+function an_print_change_files_css_selectors(){
+
+	//Get TitanFramework style
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+
+	$tfStyle .= $an_option->getOption( 'an_alternative_custom_css' );
+	$tfStyle .= $an_option->getOption( 'an_option_modal_custom_css' );
+
+	//Get AN style and script
+	$anCSS = AN_URL . 'css/an-style.min.css';
+	$anJS = AN_URL . 'js/an-scripts.min.js';
+	
+	//Replace default selectors with new ones
+	$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+	$newSelectors = $anScripts['selectors'];
+	$defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
+	
+	if(ini_get('allow_url_fopen') || function_exists('curl_init')){
+		if(ini_get('allow_url_fopen')){
+			
+			$anCSSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anCSS) . $tfStyle);
+			$anJSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anJS));
+		
+		} else if(function_exists('curl_init')){
+			
+			$anCSSFileContent =  str_replace($defaultSelectors, $newSelectors, an_curl_file_get_contents($anCSS) . $tfStyle);
+			$anJSFileContent =  str_replace($defaultSelectors, $newSelectors, an_curl_file_get_contents($anJS));
+			
+		}
+		
+		echo '	<style type="text/css">
+					' . $anCSSFileContent . '
+				</style>
+				<script type="text/javascript">
+					// <![CDATA[
+						var ajax_object = { ajaxurl : "'.admin_url('admin-ajax.php').'" };
+					// ]]>
+					' . $anJSFileContent . '
+				</script>';
+		
+		echo $output;
+	}
+}

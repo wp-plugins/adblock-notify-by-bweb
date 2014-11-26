@@ -1,10 +1,10 @@
 === Adblock Notify by b*web ===
 Contributors: brikou
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8
-Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive
+Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
 Tested up to: 4.0
-Stable tag: 1.1
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,10 +17,11 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 
 = Plugin Capabilities =
 
-* Detect adBlocker (eg Adblock Plus) by three check methods
+* Detect adBlocker (eg Adblock Plus) by 2 check methods
+* Random selectors and files name to prevent adblock to block the plugin
 * Custom notification message with jQuery Popup ([Reveal by ZURB](http://zurb.com/playground/reveal-modal-plugin)) or Javascript redirect
 * Replace blocked ads by custom message
-* Three available options to notify your users
+* 3 available options to notify your users
 * Help you increase your ads income with a passive approach
 * Responsive design friendly
 * Enqueue scripts & CSS files only when necessary
@@ -35,7 +36,7 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 * Use cookie for a better user UI
 * Cross browser detection
 * Remove settings from database on plugin uninstall
-* Multilanguage support on the admin pages (EN & FR are currently available)
+* Admin pages translatable (EN & FR are currently available)
 
 [CHECK OUT THE DEMO](http://b-website.com/adblock-notify-plugin-for-wordpress "Try It!")
 
@@ -45,10 +46,12 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 
 = Notice =
 
-* May not work properly with cache system (depend on parameters)
+* **Your server configuration needs to allow allow_url_fopen (see PHP.ini - allow_url_fopen=On) or at least CURL (fallback)**
+* **Your "/uploads" directory needs to be CHMOD to 0777**
+* May not work properly with cache system (depend on parameters) - ** Do not minify advertisement.js **
 * Need your user to have Javascript activated (no js option included)
 
-= How to use it (full details) =
+= How to use it =
 You can notify users with an activated Adblocker software by one of THREE ways !
 
 * A pretty cool and lightweight Modal Box with a custom content : **the COMPLIANT solution**
@@ -89,6 +92,35 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.2.3 =
+* JS fix
+* Better theme compatibility (no more using the_content as filter)
+
+= 1.2.2 =
+* PHP fix and improvements
+* New option panel organisation
+* allow_url_fopen fallback to CURL
+* DB requests imrprovements
+* Fix header already send warning
+
+= 1.2.1 =
+* PHP fix
+* New option to activated beta features (random selectors)
+
+= 1.2 =
+* Better performance: database requests widely reduced for stats counter
+* Improve JS script for better performance
+* CSS selectors and file names are randomly created and stored in the upload/an-temp dir.
+* Fallback if scripts can not be stored into the upload dit. (print in page)
+* Major PHP improvements & fix
+* Major JS fix (ajax+checking methode)
+* Dashboard widget improvements + tooltip
+* TitanFramework option improvements
+* Plugin meta added
+* New strings + french translation
+* Update readme.txt
+
 = 1.1 =
 * New option to enable or disable statistics+widget
 * Minor PHP improvements & fix
@@ -112,6 +144,10 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 
 
 == Upgrade Notice ==
+= 1.2 =
+* Please deactivate then reactivate before using.
+* Update the main option settings.
+
 = 1.1 =
 * Please deactivate then reactivate if admin title is missing.
 * Update the main option settings.
