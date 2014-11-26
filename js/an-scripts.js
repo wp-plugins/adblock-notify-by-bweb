@@ -16,11 +16,11 @@ jQuery(document).ready(function($) {
 
 				//launch FIRST test (js file) - check if advertisement is blocked or not
 				if ($.adblockJsFile === undefined){
-					//$an_state=true;
+					$an_state=true;
 				}
 
 				//launch SECOND test (jQuery) - check adsense element height
-				if($an_state !== true){
+				if( $an_state !== true && $('#adsense.an-sponsored').length > 0 ){
 					if ($('#adsense.an-sponsored').outerHeight() == 0){
 						$an_state=true;
 						$('#adsense.an-sponsored').remove();					

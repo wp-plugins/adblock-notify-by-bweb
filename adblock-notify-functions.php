@@ -104,7 +104,11 @@ function an_prepare(){
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
+	
+	$output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
+
 	$output = apply_filters( 'an_prepare', $output );
+	
 	echo $output;
 
 }
@@ -151,16 +155,6 @@ function an_deregister_styles() {
 
 }
 add_action( 'wp_print_styles', 'an_deregister_styles', 100);
-
-
-/***************************************************************
- * Append fake ad to Wordpress content
- ***************************************************************/
-function an_fake_an_content($content) {
-	$content .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
-	return $content;
-}
-add_filter( 'the_content', 'an_fake_an_content' );
 
 
 /***************************************************************
