@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -74,12 +74,12 @@ function an_enqueue_an_sripts(){
 	if(!is_admin()){ 
 		
 		$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
-		$an_option = unserialize( get_option( 'adblocker_notify_options' ) );
+		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
 
 		//JS
-		if($an_option['an_option_selectors'] == false) {
+		if( ( $an_option->getOption( 'an_option_selectors' )  == false ) || ( !ini_get('allow_url_fopen') && !function_exists('curl_init') ) ) {
 			wp_enqueue_script( 'an_scripts', AN_URL . 'js/an-scripts.min.js', array( 'jquery' ),  NULL, true);
-		} else if($anScripts['temp-path'] != false) {
+		} else if($anScripts['temp-path'] != false && ini_get('allow_url_fopen') ) {
 			wp_enqueue_script( 'an_scripts', $anScripts['temp-url'].$anScripts['files']['js'], array( 'jquery' ),  NULL, true);
 		}
 		
@@ -89,17 +89,21 @@ function an_enqueue_an_sripts(){
 		wp_localize_script( 'an_scripts', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
 	
 		//CSS
-		if($an_option['an_option_selectors'] == false) {
+		if( $an_option->getOption( 'an_option_selectors' )  == false || ( !ini_get('allow_url_fopen') && !function_exists('curl_init') ) ) {
 			wp_register_style( 'an_style', AN_URL . 'css/an-style.min.css', array(), NULL, NULL);
-		} else if($anScripts['temp-path'] != false) {
+		} else if($anScripts['temp-path'] != false && ini_get('allow_url_fopen') ) {
 			wp_register_style( 'an_style', $anScripts['temp-url'].$anScripts['files']['css'], array(), NULL, NULL);
+	
 		}
-		if($an_option['an_option_selectors'] == false || $anScripts['temp-path'] != false){
+	
+		if($an_option->getOption( 'an_option_selectors' ) == false || ( ini_get('allow_url_fopen') && $anScripts['temp-path'] != false ) ){
+			
 			$adBlockeNotify = unserialize(get_option( 'adblocker_notify_options'));
 			if( $adBlockeNotify['an_option_choice'] == 2 ) { 		
 				//Enqeue AN style
 				wp_enqueue_style('an_style');
 			}
+			
 		}
 
 		//CSS file does not exist anymore
@@ -110,15 +114,25 @@ function an_enqueue_an_sripts(){
 add_action( 'wp_enqueue_scripts', 'an_enqueue_an_sripts', 100);
 
 
-/***************************************************************
+/***************************************************************function_exists('curl_init')
  * Front-End Scripts & Styles printing
- * Only if an-temp is not writable
+ * Only if an-temp is not writable && ini_get('allow_url_fopen') 
  ***************************************************************/
 function an_print_an_sripts(){
-		$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+	
+	if( ini_get('allow_url_fopen') || function_exists('curl_init') ){
+		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
 		
-		if($anScripts['temp-path'] == false)
-		an_print_change_files_css_selectors();
+		if($an_option->getOption( 'an_option_selectors' ) != false){
+			
+			$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+			
+			if($anScripts['temp-path'] == false || !ini_get('allow_url_fopen'))
+				an_print_change_files_css_selectors();
+			
+		}
+		
+	}
 		
 }
 add_action('wp_footer', 'an_print_an_sripts');

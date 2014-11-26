@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  * Insert elements in the DOM : HTML & SCRIPT
  ***************************************************************/
@@ -38,7 +39,7 @@ function an_prepare(){
 	$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
 	
 	//remove cookie if deactivate
-	an_remove_cookie(AN_COOKIE, $anOptionCookie);
+	//an_remove_cookie(AN_COOKIE, $anOptionCookie);
 	
 	//redirect URL with JS
 	$anPermalink = an_url_redirect($anPageRedirect);
@@ -56,7 +57,7 @@ function an_prepare(){
 	$anSelectors = unserialize( get_option( 'adblocker_notify_selectors' ) );
 	
 	//DOM and Json
-	if($anOptionSelectors == false) {
+	if($anOptionSelectors == false  || ( !ini_get('allow_url_fopen') && !function_exists('curl_init') ) ) {
 		$output .= '<div id="an-Modal" class="reveal-modal" ';
 	} else {
 		$output .= '<div id="' . $anSelectors['selectors'][0] . '" class="' . $anSelectors['selectors'][1] . '" ';
@@ -64,7 +65,7 @@ function an_prepare(){
 	$output .= 'style="background:'. $anOptionModalBxcolor .';';
 	if(!empty($anOptionModalBxtext))
 	$output .= 'color:'. $anOptionModalBxtext;
-	$output .= '"></div>';
+	$output .= '"></div>   ';
 	$output .= '<script type="text/javascript">';
 	$output .= '/* <![CDATA[ */';
 	$output .= 'var anOptions =' . 
@@ -99,7 +100,7 @@ function an_prepare(){
 		
 		if($anNojsPermalink != "undefined"){
 			//Set new cookie value	
-			an_nojs_cookie($expiration);		
+			//an_nojs_cookie($expiration);		
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
@@ -108,6 +109,34 @@ function an_prepare(){
 
 }
 add_action('wp_footer', 'an_prepare');
+
+
+/***************************************************************
+ * Dealing with cookies before page load to 
+ * prevent Header already sent notice
+ ***************************************************************/
+function an_cookies_init(){
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+	
+	$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
+	$anPageNojsActivation = $an_option->getOption( 'an_page_nojs_activation' );
+	$anPageNojsRedirect = $an_option->getOption( 'an_page_nojs_redirect' );
+
+	if(!empty($anPageNojsActivation) && !$_COOKIE[AN_COOKIE]) {
+		//redirect URL with NO JS
+		$anNojsPermalink = an_url_redirect($anPageNojsRedirect);
+		
+		if($anNojsPermalink != "undefined"){
+			//Set new cookie value	
+			an_nojs_cookie($expiration);
+		}
+	}
+	
+	//remove cookie if deactivate
+	an_remove_cookie(AN_COOKIE, $anOptionCookie);
+
+}
+add_action( 'init', 'an_cookies_init' );
 
 
 /***************************************************************
@@ -156,10 +185,10 @@ function an_url_redirect($pageId){
 
 
 /***************************************************************
- * Remove cookie when option is disabled
+ * Remove cookie when option is disabled 
  ***************************************************************/
 function an_remove_cookie($cookieName, $anOptionCookie){
-	if (isset($_COOKIE[$cookieName]) && $anOptionCookie != 1) {
+	if ( ( isset($_COOKIE[$cookieName]) && $anOptionCookie == 2 ) || ( isset($_COOKIE[$cookieName]) && $anOptionCookie == '2' ) ) {
 		unset($_COOKIE[$cookieName]);
 		setcookie($cookieName, null, -1, '/');
 	}
@@ -502,8 +531,9 @@ function an_get_counters() {
  * Register the Dashboard Widget display function
  ***************************************************************/
 function an_dashboard_widgets() {
-	$adBlockeNotify = unserialize(get_option( 'adblocker_notify_options'));
-	if( $adBlockeNotify['an_option_stats'] != 2 ) { 		
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+
+	if( $an_option->getOption( 'an_option_stats' ) != 2 ) { 		
 		global $wp_meta_boxes;
 		wp_add_dashboard_widget('an_dashboard_widgets', '<img src="' . AN_URL . 'img/icon-bweb.svg" class="bweb-logo" alt="b*web"/>&nbsp;&nbsp;'. __( 'Adblock Notify Stats', 'an-translate' ), 'an_get_counters');
  		//Chart JS
@@ -511,6 +541,7 @@ function an_dashboard_widgets() {
    		//CSS & JS
 		add_action( 'admin_enqueue_scripts', 'an_register_admin_scripts' );
 	}
+	
 }
 add_action('wp_dashboard_setup', 'an_dashboard_widgets');
 
@@ -610,45 +641,49 @@ function an_save_setting_random_selectors() {
 	$uploadDir = wp_upload_dir();
 	$tempFolderPath = trailingslashit( $uploadDir['basedir'] ) . 'an-temp/';
 	$tempFolderURL = trailingslashit( $uploadDir['baseurl'] ) . 'an-temp/';
-		
 
-	if($an_option['an_option_selectors'] == true){
+	//Define new selectors
+	$newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
+				
+	if($an_option['an_option_selectors'] == true ){
+		
+		if( ini_get('allow_url_fopen') ) {
 	
-		//Flush semectors
-		if($an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ){
+			//Flush semectors
+			if($an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ){
+				
+				//Retrieve old files infos
+				$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
 			
-			//Retrieve old files infos
-			$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
-		
-			//Define new selectors
-			$newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
-			
-			//Generate new css and js files
-			$titanCssContent = an_update_titan_css_selectors($newSelectors);
-			$newCSS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'css/an-style.min.css', $anScripts['files']['css'], an_random_slug(), $newSelectors, $titanCssContent );
-			$newJS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'js/an-scripts.min.js', $anScripts['files']['js'], an_random_slug(), $newSelectors );
-			
-			//Upload dir and temp dir are not writable
-			if($newCSS == false || $newJS== false){
-				$tempFolderPath = false;
+				//Generate new css and js files
+				$titanCssContent = an_update_titan_css_selectors($newSelectors);
+				$newCSS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'css/an-style.min.css', $anScripts['files']['css'], an_random_slug(), $newSelectors, $titanCssContent );
+				$newJS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'js/an-scripts.min.js', $anScripts['files']['js'], an_random_slug(), $newSelectors );
+				
+				//Upload dir and temp dir are not writable
+				if($newCSS == false || $newJS== false){
+					$tempFolderPath = false;
+				}
+
+				//Store data
+				$newFiles = array( 
+					'temp-path' => $tempFolderPath,
+					'temp-url' => $tempFolderURL,
+					'files'=> array( 
+						'css'=> $newCSS, 
+						'js' => $newJS
+					), 
+					'selectors' => $newSelectors 
+				);
+
+				update_option('adblocker_notify_selectors', serialize($newFiles));
+
 			}
-		
-			//Store data
-			$newFiles = array( 
-							'temp-path' => $tempFolderPath,
-							'temp-url' => $tempFolderURL,
-							'files'=> array( 
-								'css'=> $newCSS, 
-								'js' => $newJS
-							), 
-							'selectors' => $newSelectors 
-						);
-		
-			update_option('adblocker_notify_selectors', serialize($newFiles));
 			
 		}
-		
-		//remove option
+			
+
+		//remove option flush
 		$an_option['an_option_flush'] = false;
 		update_option( 'adblocker_notify_options', serialize($an_option));
 	
@@ -673,15 +708,34 @@ function an_error_admin_notices() {
 
 	$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
 
-	if($anScripts['temp-path'] == false)
-	echo '
-		<div class="error">
-			<p>'. __( 'There was an error creating Adblock Notify CSS and JS files. Upload directory is not writable. Please CHMOD "wp-content/uploads" to 0777', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;
-				[ <a href="http://codex.wordpress.org/Changing_File_Permissions" target="_blank" title="Changing File Permissions"> Changing File Permissions</a> ]
-			</p>
-			<p>'. __( 'Don\'t worry, we thought about it. Adblock Notify will print the scripts directly in your DOM, but for performance purpose it is recommended to change your uploads directory CHMOD!', 'an-translate' ) .'</p>
-		</div>
-	';
+	if(!empty($anScripts) && $anScripts['temp-path'] == false) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: There was an error creating Adblock Notify CSS and JS files. Upload directory is not writable. Please CHMOD "wp-content/uploads" to 0777', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;
+					[ <a href="http://codex.wordpress.org/Changing_File_Permissions" target="_blank" title="Changing File Permissions"> Changing File Permissions</a> ]
+				</p>
+				<p>'. __( 'Don\'t worry, we thought about it. Adblock Notify will print the scripts directly in your DOM, but for performance purpose it is recommended to change your uploads directory CHMOD!', 'an-translate' ) .'</p>
+			</div>
+		';
+	}
+	
+	if(!ini_get('allow_url_fopen') && function_exists('curl_init')) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: This plugin requires "allow_url_fopen" to be activated, but it is disabled in the server configuration. The plugin will not work properly if you don\'t turn it on!', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;</p>
+				<p>'. __( 'To enable this functionality, use a text editor to modify the allow_url_fopen directive in the php.ini file as follows: ', 'an-translate' ) .' <i>allow_url_fopen = on</i></p>
+			</div>
+		';
+	}
+
+	if(!ini_get('allow_url_fopen') && !function_exists('curl_init')) {
+		echo '
+			<div class="error warning">
+				<p>'. __( 'WARNING: This plugin requires "allow_url_fopen" to be activated or at least CURL to run in defect mode, but they are disabled in the server configuration. The plugin will not work properly if you don\'t turn allow_url_fopen" on!', 'an-translate' ) .' &nbsp;&nbsp;&nbsp;&nbsp;</p>
+				<p>'. __( 'To enable this functionality, use a text editor to modify the allow_url_fopen directive in the php.ini file as follows: ', 'an-translate' ) .' <i>allow_url_fopen = on</i></p>
+			</div>
+		';
+	}
 
 }
 add_action('admin_notices', 'an_error_admin_notices');
@@ -702,6 +756,22 @@ function an_update_titan_css_selectors($newSelectors){
 	unlink(trailingslashit( $uploadDir['basedir'] ) . 'titan-framework-adblocker_notify-css.css');
 
 	return $fileContent;
+	
+}
+
+
+/***************************************************************
+ * Get files content with curl if fopen disable on server
+ ***************************************************************/
+function an_curl_file_get_contents($url) {
+	//function_exists('curl_init')
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+	
+    return $output;
 }
 
 
@@ -711,9 +781,10 @@ function an_update_titan_css_selectors($newSelectors){
 function an_print_change_files_css_selectors(){
 
 	//Get TitanFramework style
-	$tfOptions = unserialize( get_option( 'adblocker_notify_options' ) );
-	$tfStyle .= $tfOptions['an_alternative_custom_css'];
-	$tfStyle .= $tfOptions['an_option_modal_custom_css'];
+	$an_option = TitanFramework::getInstance( 'adblocker_notify' );
+
+	$tfStyle .= $an_option->getOption( 'an_alternative_custom_css' );
+	$tfStyle .= $an_option->getOption( 'an_option_modal_custom_css' );
 
 	//Get AN style and script
 	$anCSS = AN_URL . 'css/an-style.min.css';
@@ -724,18 +795,29 @@ function an_print_change_files_css_selectors(){
 	$newSelectors = $anScripts['selectors'];
 	$defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
 	
-	$anCSSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anCSS) . $tfStyle);
-	$anJSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anJS));
-	
-	echo '	<style type="text/css">
-				' . $anCSSFileContent . '
-			</style>
-			<script type="text/javascript">
-				// <![CDATA[
-					var ajax_object = { ajaxurl : "'.admin_url('admin-ajax.php').'" };
-				// ]]>
-	 			' . $anJSFileContent . '
-			</script>';
-	
-	echo $output;
+	if(ini_get('allow_url_fopen') || function_exists('curl_init')){
+		if(ini_get('allow_url_fopen')){
+			
+			$anCSSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anCSS) . $tfStyle);
+			$anJSFileContent =  str_replace($defaultSelectors, $newSelectors, file_get_contents($anJS));
+		
+		} else if(function_exists('curl_init')){
+			
+			$anCSSFileContent =  str_replace($defaultSelectors, $newSelectors, an_curl_file_get_contents($anCSS) . $tfStyle);
+			$anJSFileContent =  str_replace($defaultSelectors, $newSelectors, an_curl_file_get_contents($anJS));
+			
+		}
+		
+		echo '	<style type="text/css">
+					' . $anCSSFileContent . '
+				</style>
+				<script type="text/javascript">
+					// <![CDATA[
+						var ajax_object = { ajaxurl : "'.admin_url('admin-ajax.php').'" };
+					// ]]>
+					' . $anJSFileContent . '
+				</script>';
+		
+		echo $output;
+	}
 }

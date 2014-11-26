@@ -73,12 +73,27 @@
 }
 
 /*TitanFramework Admin Page*/
+div.error.warning{
+	border-left: 4px solid #FFAE00;
+}
+.titan-framework-panel-wrap .form-table h3.home:before {
+	display: block;
+	position: relative;
+	content: '';
+	width: 100%;
+	height: 100px;
+	background: url(../img/icon-bweb.svg);
+	background-size: auto 100%;
+	margin-bottom: 20px;
+	background-repeat: no-repeat;
+}
 .titan-framework-panel-wrap .tf-heading th h3 {
 	padding-left: 30px;
 }
 .titan-framework-panel-wrap .tf-heading th h3:before {
-	background: url(../img/icon_bweb.png);
-	content: " ";
+	background-image: url(../img/icon-bweb.png);
+	background-size: cover;
+	content: "";
 	position: absolute;
 	height:16px;
 	width:16px;

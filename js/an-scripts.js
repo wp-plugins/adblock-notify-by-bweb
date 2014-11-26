@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
 	/*  Detection
 	/* ------------------------------------ */	
 	$(window).load(function() {
-		//if( (getCookie('anCookie') !== 'true' && anOptions.anOptionCookie == 1) || (anOptions.anOptionCookie == 2 && anOptions.anOptionChoice == 2) || (anOptions.anOptionCookie == 2 && anOptions.anOptionChoice == 3) || anOptions.anAlternativeActivation == true){
+
 			setTimeout(function() {
 
 				//launch FIRST test (js file) - check if advertisement is blocked or not
@@ -31,9 +31,9 @@ jQuery(document).ready(function($) {
 				an_message_display($an_state);
 
 			}, 100);
-		//}
-	});
 
+	});
+	
 	/*  Do action
 	/* ------------------------------------ */	
 
@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
 		if($an_state === true ){ 		
 
 			//IF MODAL BOX IS ACTIVATED
-			if ( anOptions.anOptionChoice == 2 && getCookie('anCookie') !== 'true' || anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 2) {
+			if ( ( anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 1 && getCookie('anCookie') !== 'true' ) || ( anOptions.anOptionChoice == 2 && anOptions.anOptionCookie == 2 ) ) {
 
 				if(anOptions.anOptionModalBxtitle != ''){
 					var headingColor = 'style="color:'+ anOptions.anOptionModalBxtitle +'"';
