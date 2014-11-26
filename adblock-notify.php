@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.2
+ * Version: 1.2.1
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -74,10 +74,14 @@ function an_enqueue_an_sripts(){
 	if(!is_admin()){ 
 		
 		$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+		$an_option = unserialize( get_option( 'adblocker_notify_options' ) );
 
 		//JS
-		if($anScripts['temp-path'] != false)
-		wp_enqueue_script( 'an_scripts', $anScripts['temp-url'].$anScripts['files']['js'], array( 'jquery' ),  NULL, true);
+		if($an_option['an_option_selectors'] == false) {
+			wp_enqueue_script( 'an_scripts', AN_URL . 'js/an-scripts.min.js', array( 'jquery' ),  NULL, true);
+		} else if($anScripts['temp-path'] != false) {
+			wp_enqueue_script( 'an_scripts', $anScripts['temp-url'].$anScripts['files']['js'], array( 'jquery' ),  NULL, true);
+		}
 		
 		wp_enqueue_script( 'an_advertisement', AN_URL . 'js/advertisement.js', array( 'jquery' ),  NULL, true);
 		
@@ -85,9 +89,12 @@ function an_enqueue_an_sripts(){
 		wp_localize_script( 'an_scripts', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
 	
 		//CSS
-		if($anScripts['temp-path'] != false) {
+		if($an_option['an_option_selectors'] == false) {
+			wp_register_style( 'an_style', AN_URL . 'css/an-style.min.css', array(), NULL, NULL);
+		} else if($anScripts['temp-path'] != false) {
 			wp_register_style( 'an_style', $anScripts['temp-url'].$anScripts['files']['css'], array(), NULL, NULL);
-			
+		}
+		if($an_option['an_option_selectors'] == false || $anScripts['temp-path'] != false){
 			$adBlockeNotify = unserialize(get_option( 'adblocker_notify_options'));
 			if( $adBlockeNotify['an_option_choice'] == 2 ) { 		
 				//Enqeue AN style

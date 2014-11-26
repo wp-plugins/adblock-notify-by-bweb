@@ -9,6 +9,7 @@ function an_prepare(){
 	//General Options
 	$anOptionChoice = $an_option->getOption( 'an_option_choice' );
 	$anOptionStats = $an_option->getOption( 'an_option_stats' );
+	$anOptionSelectors = $an_option->getOption( 'an_option_selectors' );
 	$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
 	$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
 	$anModalTitle = $an_option->getOption( 'an_modal_title' );
@@ -55,7 +56,11 @@ function an_prepare(){
 	$anSelectors = unserialize( get_option( 'adblocker_notify_selectors' ) );
 	
 	//DOM and Json
-	$output .= '<div id="' . $anSelectors['selectors'][0] . '" class="' . $anSelectors['selectors'][1] . '" ';
+	if($anOptionSelectors == false) {
+		$output .= '<div id="an-Modal" class="reveal-modal" ';
+	} else {
+		$output .= '<div id="' . $anSelectors['selectors'][0] . '" class="' . $anSelectors['selectors'][1] . '" ';
+	}
 	$output .= 'style="background:'. $anOptionModalBxcolor .';';
 	if(!empty($anOptionModalBxtext))
 	$output .= 'color:'. $anOptionModalBxtext;
@@ -598,39 +603,61 @@ function an_change_files_css_selectors($tempFolderPath, $tempFolderURL, $file, $
  * Save scripts and styles with new random selectors after saving Titan Options
  ***************************************************************/ 
 function an_save_setting_random_selectors() {
-	//Retrieve old files infos
-	$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
 
+	$an_option = unserialize( get_option( 'adblocker_notify_options' ) );
+	
 	//Define new temp path
 	$uploadDir = wp_upload_dir();
 	$tempFolderPath = trailingslashit( $uploadDir['basedir'] ) . 'an-temp/';
 	$tempFolderURL = trailingslashit( $uploadDir['baseurl'] ) . 'an-temp/';
+		
 
-	//Define new selectors
-	$newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
+	if($an_option['an_option_selectors'] == true){
 	
-	//Generate new css and js files
-	$titanCssContent = an_update_titan_css_selectors($newSelectors);
-	$newCSS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'css/an-style.min.css', $anScripts['files']['css'], an_random_slug(), $newSelectors, $titanCssContent );
-	$newJS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'js/an-scripts.min.js', $anScripts['files']['js'], an_random_slug(), $newSelectors );
+		//Flush semectors
+		if($an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ){
+			
+			//Retrieve old files infos
+			$anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
+		
+			//Define new selectors
+			$newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
+			
+			//Generate new css and js files
+			$titanCssContent = an_update_titan_css_selectors($newSelectors);
+			$newCSS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'css/an-style.min.css', $anScripts['files']['css'], an_random_slug(), $newSelectors, $titanCssContent );
+			$newJS = an_change_files_css_selectors($tempFolderPath, $tempFolderURL, AN_URL . 'js/an-scripts.min.js', $anScripts['files']['js'], an_random_slug(), $newSelectors );
+			
+			//Upload dir and temp dir are not writable
+			if($newCSS == false || $newJS== false){
+				$tempFolderPath = false;
+			}
+		
+			//Store data
+			$newFiles = array( 
+							'temp-path' => $tempFolderPath,
+							'temp-url' => $tempFolderURL,
+							'files'=> array( 
+								'css'=> $newCSS, 
+								'js' => $newJS
+							), 
+							'selectors' => $newSelectors 
+						);
+		
+			update_option('adblocker_notify_selectors', serialize($newFiles));
+			
+		}
+		
+		//remove option
+		$an_option['an_option_flush'] = false;
+		update_option( 'adblocker_notify_options', serialize($an_option));
 	
-	//Upload dir and temp dir are not writable
-	if($newCSS == false || $newJS== false){
-		$tempFolderPath = false;
+	} else {
+		
+		// Remove temp files
+		an_delete_temp_folder($tempFolderPath);
+			
 	}
-
-	//Store data
-	$newFiles = array( 
-					'temp-path' => $tempFolderPath,
-					'temp-url' => $tempFolderURL,
-					'files'=> array( 
-						'css'=> $newCSS, 
-						'js' => $newJS
-					), 
-					'selectors' => $newSelectors 
-				);
-
-	update_option('adblocker_notify_selectors', serialize($newFiles));
 	
 }
 add_action('tf_admin_options_saved_adblocker_notify', 'an_save_setting_random_selectors',99);

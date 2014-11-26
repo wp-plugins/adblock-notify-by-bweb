@@ -86,6 +86,24 @@ function an_create_options() {
 			'default' => '1',
 	) );
 	$generalTab->createOption( array(
+			'name' => '<strong class="an-red">BETA</strong> ' . __( 'Random selectors and files', 'an-translate' ),
+			'type' => 'heading',
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Use random selectors and files', 'an-translate' ),
+			'id' => 'an_option_selectors',
+			'type' => 'checkbox',
+			'desc' => __( 'Random selectors and files name to prevent adblock to block the plugin. Temp files with new selectors will be generated and stored in a temp folder in your /uploads directory  - Default: Unchecked', 'an-translate' ),
+			'default' => false,
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Flush files', 'an-translate' ),
+			'id' => 'an_option_flush',
+			'type' => 'checkbox',
+			'desc' => __( 'Will recreate the selectors and temps files on options saved.', 'an-translate' ),
+			'default' => false,
+	) );
+	$generalTab->createOption( array(
 			'name' => __( 'Cookies Options', 'an-translate' ),
 			'type' => 'heading',
 	) );
