@@ -13,7 +13,7 @@ function an_create_options() {
 	 ***************************************************************/
 	$an_panel = $an_option->createAdminPanel( array(
 			'name' => AN_NAME, 
-			'icon' => AN_URL . 'img/icon_bweb.png',
+			'icon' => AN_URL . 'img/icon-bweb.png',
 			'id' => AN_ID,
 	) );
 	
@@ -84,6 +84,24 @@ function an_create_options() {
 					'2' => __( 'No', 'an-translate' ),
 			),
 			'default' => '1',
+	) );
+	$generalTab->createOption( array(
+			'name' => '<strong class="an-red">BETA</strong> ' . __( 'Random selectors and files', 'an-translate' ),
+			'type' => 'heading',
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Use random selectors and files', 'an-translate' ),
+			'id' => 'an_option_selectors',
+			'type' => 'checkbox',
+			'desc' => __( 'Random selectors and files name to prevent adblock to block the plugin. Temp files with new selectors will be generated and stored in a temp folder in your /uploads directory  - Default: Unchecked', 'an-translate' ),
+			'default' => false,
+	) );
+	$generalTab->createOption( array(
+			'name' => __( 'Flush files', 'an-translate' ),
+			'id' => 'an_option_flush',
+			'type' => 'checkbox',
+			'desc' => __( 'Will recreate the selectors and temps files on options saved.', 'an-translate' ),
+			'default' => false,
 	) );
 	$generalTab->createOption( array(
 			'name' => __( 'Cookies Options', 'an-translate' ),
@@ -246,7 +264,9 @@ function an_create_options() {
 		'name' => __( 'Custom CSS', 'an-translate' ) .' <br /><i>('. __( 'Advance users', 'an-translate' ) .')<i>',
 		'id' => 'an_option_modal_custom_css',
 		'type' => 'code',
-		'desc' => __( 'Put your custom CSS rules here. Modal Box ID is', 'an-translate' ) .' <strong class="an-red">#an-Modal</strong>',
+		'desc' => __( 
+			'Put your custom CSS rules here. Modal Box ID is', 'an-translate' ) .' <strong class="an-red">#an-Modal</strong>
+			<br /><br /><strong class="an-red">' . __( 'This selector will be changed during settings update by a random new one to prevent adblock to hide this element. All the CSS and JS files are parsed to be updated with this new selectors. That is why you have to add your custom style in the above field and not in you theme stylesheet.', 'an-translate' ) . '</strong>',
 		'lang' => 'css',
 	) );
 	
@@ -363,6 +383,7 @@ function an_create_options() {
 					<p>
 					<strong> '. __( 'NOTE:', 'an-translate' ) .'</strong>  '. __( 'If you\'ve activated the ads containers cloning, you can still add custom CSS on your text.', 'an-translate' ) .'
 					<br /> '. __( 'If you really have to overload .an-alternative with your own CSS properties, you may probably need to use !important after each of them, but this is not advised.', 'an-translate' ) .'
+					<br /><br /><strong class="an-red">' . __( 'This selector will be changed during settings update by a random new one to prevent adblock to hide this element. All the CSS and JS files are parsed to be updated with this new selectors. That is why you have to add your custom style in the above field and not in you theme stylesheet.', 'an-translate' ) . '</strong>
 					</p>',
 		'lang' => 'css',
 	) );
@@ -388,45 +409,5 @@ function an_create_options() {
 		'save' => __( 'Save Changes', 'an-translate' ),
 		'reset' => __( 'Reset to Defaults', 'an-translate' ),
 	) );
-	
-	
-	/***************************************************************
-	 * Launch options framework instance
-	 ***************************************************************/ 
-	function an_save_setting_data() {
-		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
-	
-		//General Options
-		$anOptionChoice = $an_option->getOption( 'an_option_choice' );
-		$anOptionStats = $an_option->getOption( 'an_option_stats' );
-		$anOptionCookie = $an_option->getOption( 'an_option_cookie' );
-		$anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
-		$anModalTitle = $an_option->getOption( 'an_modal_title' );
-		$anModalText = $an_option->getOption( 'an_modal_text' );
-		$anPageRedirect = $an_option->getOption( 'an_page_redirect' );
-		$anPageNojsActivation = $an_option->getOption( 'an_page_nojs_activation' );
-		$anPageNojsRedirect = $an_option->getOption( 'an_page_nojs_redirect' );
-	
-		//Modal Options
-		$anOptionModalEffect = $an_option->getOption( 'an_option_modal_effect' );
-		$anOptionModalSpeed = $an_option->getOption( 'an_option_modal_speed' );
-		$anOptionModalClose = $an_option->getOption( 'an_option_modal_close' );
-		$anOptionModalBgcolor = $an_option->getOption( 'an_option_modal_bgcolor' );
-		$anOptionModalBgopacity = $an_option->getOption( 'an_option_modal_bgopacity' );
-		$anOptionModalBxcolor = $an_option->getOption( 'an_option_modal_bxcolor' );
-		$anOptionModalBxtitle = $an_option->getOption( 'an_option_modal_bxtitle' );
-		$anOptionModalBxtext = $an_option->getOption( 'an_option_modal_bxtext' );
-		$anOptionModalCustomCSS = $an_option->getOption( 'an_option_modal_custom_css' );
-	
-		//Modal Options
-		$anAlternativeActivation = $an_option->getOption( 'an_alternative_activation' );
-		$anAlternativeElement = $an_option->getOption( 'an_alternative_elements' );
-		$anAlternativeText = $an_option->getOption( 'an_alternative_text' );
-		$anAlternativeClone = $an_option->getOption( 'an_alternative_clone' );
-		$anAlternativeProperties = $an_option->getOption( 'an_alternative_properties' );
-		$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
-	
-	}
-	add_action('wp_head' , 'an_save_setting_data' );
 	
 } //en of an_create_options
