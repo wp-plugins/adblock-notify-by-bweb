@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -91,19 +91,16 @@ function an_enqueue_an_sripts(){
 			wp_enqueue_script( 'an_scripts', $anScripts['temp-url'].$anScripts['files']['js'], array( 'jquery' ),  NULL, true);
 			wp_register_style( 'an_style', $anScripts['temp-url'].$anScripts['files']['css'], array(), NULL, NULL);
 	
+			//CSS file does not exist anymore
+			wp_dequeue_style('tf-compiled-options-adblocker_notify');
 		}
 	
-		if($an_option->getOption( 'an_option_selectors' ) == false || ( ini_get('allow_url_fopen') && $anScripts['temp-path'] != false ) ){
+		if( $an_option->getOption( 'an_option_choice' ) == 2 || $an_option->getOption( 'an_alternative_activation' )  == true  ) { 		
 			
-			if( $an_option->getOption( 'an_option_choice' ) == 2 || $an_option->getOption( 'an_alternative_activation' )  == true  ) { 		
-				//Enqeue AN style
-				wp_enqueue_style('an_style');
-			}
+			//Enqeue AN style
+			wp_enqueue_style('an_style');
 			
 		}
-
-		//CSS file does not exist anymore
-		wp_dequeue_style('tf-compiled-options-adblocker_notify');
 		
 	}
 }
