@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.2.5
+ * Version: 1.2.6
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -58,7 +58,6 @@ function an_translate_load_textdomain() {
 add_action( 'plugins_loaded', 'an_translate_load_textdomain', 1 );
 
 
-
 /***************************************************************
  * Load plugin files
  ***************************************************************/
@@ -77,8 +76,6 @@ function an_enqueue_an_sripts(){
 		$an_option = TitanFramework::getInstance( 'adblocker_notify' );
 
 		
-		//AJAX
-		wp_localize_script( 'an_scripts', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
 		wp_enqueue_script( 'an_advertisement', AN_URL . 'js/advertisement.js', array( 'jquery' ),  NULL, true);
 	
 		if( ( $an_option->getOption( 'an_option_selectors' )  == false ) || ( !ini_get('allow_url_fopen') && !function_exists('curl_init') ) ) {
@@ -94,7 +91,10 @@ function an_enqueue_an_sripts(){
 			//CSS file does not exist anymore
 			wp_dequeue_style('tf-compiled-options-adblocker_notify');
 		}
-	
+
+		//AJAX
+		wp_localize_script( 'an_scripts', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
+
 		if( $an_option->getOption( 'an_option_choice' ) == 2 || $an_option->getOption( 'an_alternative_activation' )  == true  ) { 		
 			
 			//Enqeue AN style
