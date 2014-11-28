@@ -38,9 +38,6 @@ function an_prepare(){
 	$anAlternativeProperties = $an_option->getOption( 'an_alternative_properties' );
 	$anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
 	
-	//remove cookie if deactivate
-	//an_remove_cookie(AN_COOKIE, $anOptionCookie);
-	
 	//redirect URL with JS
 	$anPermalink = an_url_redirect($anPageRedirect);
 
@@ -99,8 +96,6 @@ function an_prepare(){
 		$anNojsPermalink = an_url_redirect($anPageNojsRedirect);
 		
 		if($anNojsPermalink != "undefined"){
-			//Set new cookie value	
-			//an_nojs_cookie($expiration);		
 			$output .= '<noscript><meta http-equiv="refresh" content="0; url='. $anNojsPermalink .'" /></noscript>';
 		}
 	}
