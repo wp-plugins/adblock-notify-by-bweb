@@ -19,7 +19,7 @@ function an_adblock_counter() {
         $anCount[$an_state] ++;
 
         //then update history
-        $anCount = an_history_counter($an_state, $anCount);
+        $anCount = an_history_counter($anCount, $an_state);
     }
 
     //update db	
@@ -46,7 +46,7 @@ function an_date_diff($toDay, $toCheck) {
 /***************************************************************
  * Page history counter
  ***************************************************************/
-function an_history_counter($val = null, $anCount) {
+function an_history_counter($anCount, $val = null) {
     $anToday = date('Y-m-d', current_time('timestamp', 0));
     //$anToday = date( 'Y-m-d', strtotime( '1 day', strtotime( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) ) ) );
 
@@ -94,8 +94,7 @@ function an_history_counter($val = null, $anCount) {
 /***************************************************************
  * Data history extraction & order revert for chart
  ***************************************************************/
-function an_widget_data_histoty($val = null) {
-    $anCount = get_option('adblocker_notify_counter');
+function an_widget_data_histoty($anCount, $val = null) {
     if (empty($anCount['history'][0]))
         return;
 
@@ -118,15 +117,19 @@ function an_get_counters() {
     }
 
     //prevent plugin's counter to be higher than the page counter if page is refreshed during the ajax call or if wordpress caching systeme in not badly configured
-    if ($anCount['blocked'] > $anCount['total']) {
-        $anCount['total'] = $anCount['blocked'];
-    }
-    if ($anCount['history'][0]['blocked'] > $anCount['history'][0]['total']) {
-        $anCount['history'][0]['total'] = $anCount['history'][0]['blocked'];
-    }
+    if ( ($anCount['blocked'] > $anCount['total']) || ($anCount['history'][0]['blocked'] > $anCount['history'][0]['total']) ) {
 
-    //update db	
-    update_option('adblocker_notify_counter', $anCount);
+		if ($anCount['blocked'] > $anCount['total']) {
+			$anCount['total'] = $anCount['blocked'];
+		}
+		if ($anCount['history'][0]['blocked'] > $anCount['history'][0]['total']) {
+			$anCount['history'][0]['total'] = $anCount['history'][0]['blocked'];
+		}
+	
+		//update db	
+		update_option('adblocker_notify_counter', $anCount);
+		
+	}
 
     if (empty($anCount['total']))
         $anCount['total'] = 0;
@@ -204,8 +207,8 @@ function an_get_counters() {
                 'anCountBlocked' => $anCount['blocked'],
                 'totalNoBlockerToday' => $totalNoBlockerToday,
                 'anCountBlockedHistory' => $anCount['history'][0]['blocked'],
-                'anDataHistotyTotal' => an_widget_data_histoty('total'),
-                'anDataHistotyBlocked' => an_widget_data_histoty('blocked'),
+                'anDataHistotyTotal' => an_widget_data_histoty($anCount, 'total'),
+                'anDataHistotyBlocked' => an_widget_data_histoty($anCount, 'blocked'),
     ));
     $output .= '/* ]]> */';
     $output .= '</script>';

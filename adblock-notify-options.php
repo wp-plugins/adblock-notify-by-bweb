@@ -413,5 +413,4 @@ function an_create_options() {
         'save' => __('Save Changes', 'an-translate'),
         'reset' => __('Reset to Defaults', 'an-translate'),
     ));
-}
-//en of an_create_options
+}//en of an_create_options

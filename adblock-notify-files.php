@@ -101,7 +101,7 @@ function an_save_setting_random_selectors() {
         if( $an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ) $flush = true;
 
         //Generate new css and js files
-        $titanCssContent = an_update_titan_css_selectors();
+        $titanCssContent = an_update_titan_css_selectors($an_option);
         $newCSS = an_change_files_css_selectors(
                     $flush,
                     $tempFolderPath, 
@@ -191,19 +191,18 @@ add_action('admin_notices', 'an_error_admin_notices');
 /***************************************************************
  * Edit Titan Generated CSS
  ***************************************************************/
-function an_update_titan_css_selectors() {
+function an_update_titan_css_selectors($an_option) {
 
-    //Get TitanFramework style
-    $an_option = TitanFramework::getInstance('adblocker_notify');
-   
     $tfStyle = '';
-    $tfStyle .= $an_option->getOption('an_alternative_custom_css');
-    $tfStyle .= $an_option->getOption('an_option_modal_custom_css');
+    $tfStyle .= $an_option['an_alternative_custom_css'];
+    $tfStyle .= $an_option['an_option_modal_custom_css'];
 
     //Remove TitanFramework Generated Style
     $uploadDir = wp_upload_dir();
-    
-    unlink(trailingslashit($uploadDir['basedir']) . 'titan-framework-adblocker_notify-css.css');
+    $TfCssFile = trailingslashit( $uploadDir['basedir']  ) . 'titan-framework-adblocker_notify-css.css';
+	
+	if( file_exists( $TfCssFile ) )
+    	unlink( $TfCssFile );
 
     return $tfStyle;
 }

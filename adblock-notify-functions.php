@@ -142,19 +142,6 @@ add_action('init', 'an_cookies_init');
 
 
 /***************************************************************
- * Deregister custom stylesheet if option is empty 
- ***************************************************************/
-function an_deregister_styles() {
-    $anBlockerNotify = unserialize(get_option('adblocker_notify_options'));
-
-    if (empty($anBlockerNotify['an_option_modal_custom_css']) && empty($anBlockerNotify['an_alternative_custom_css'])) {
-        wp_deregister_style('tf-compiled-options-adblocker_notify');
-    }
-}
-add_action('wp_print_styles', 'an_deregister_styles', 100);
-
-
-/***************************************************************
  * Generate redirection URL with page ID
  ***************************************************************/
 function an_url_redirect($pageId) {
