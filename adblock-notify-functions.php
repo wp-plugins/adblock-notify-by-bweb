@@ -118,12 +118,13 @@ add_action('wp_footer', 'an_prepare');
  * prevent Header already sent notice
  ***************************************************************/
 function an_cookies_init() {
-    $an_option = TitanFramework::getInstance('adblocker_notify');
+    
+	$an_option = unserialize(get_option('adblocker_notify_options'));
 
-    $anOptionCookie = $an_option->getOption('an_option_cookie');
-    $anPageNojsActivation = $an_option->getOption('an_page_nojs_activation');
-    $anPageNojsRedirect = $an_option->getOption('an_page_nojs_redirect');
-    $anOptionCookieLife = $an_option->getOption('an_option_cookie_life');
+    $anOptionCookie = $an_option['an_option_cookie'];
+    $anPageNojsActivation = $an_option['an_page_nojs_activation'];
+    $anPageNojsRedirect = $an_option['an_page_nojs_redirect'];
+    $anOptionCookieLife = $an_option['an_option_cookie_life'];
     
     if (!empty($anPageNojsActivation) && !$_COOKIE[AN_COOKIE]) {
         //redirect URL with NO JS
@@ -137,6 +138,7 @@ function an_cookies_init() {
 
     //remove cookie if deactivate
     an_remove_cookie(AN_COOKIE, $anOptionCookie);
+	
 }
 add_action('init', 'an_cookies_init');
 
