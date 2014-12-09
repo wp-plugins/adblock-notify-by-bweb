@@ -78,13 +78,16 @@ function an_change_files_css_selectors($flush, $tempFolderPath, $tempFolderURL, 
  * Save scripts and styles with new random selectors after saving Titan Options
  ***************************************************************/
 function an_save_setting_random_selectors() {
+
+	//Restart cookie on every options save.
+	setcookie(AN_COOKIE, null, -1, '/');
     
     $an_option = unserialize(get_option('adblocker_notify_options'));
   
     //Define new temp path
     $uploadDir = wp_upload_dir();
-    $tempFolderPath = trailingslashit($uploadDir['basedir']) . 'an-temp/';
-    $tempFolderURL = trailingslashit($uploadDir['baseurl']) . 'an-temp/';
+    $tempFolderPath = trailingslashit( $uploadDir['basedir'] ) . 'an-temp/';
+    $tempFolderURL = trailingslashit( $uploadDir['baseurl'] ) . 'an-temp/';
 
     if( $an_option['an_option_selectors'] == true ) {
         
@@ -98,7 +101,7 @@ function an_save_setting_random_selectors() {
         $newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
     
         $flush = false;
-        if( $an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ) $flush = true;
+        if( $an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ||  $anScripts['temp-path'] == false ) $flush = true;
 
         //Generate new css and js files
         $titanCssContent = an_update_titan_css_selectors($an_option);
@@ -236,6 +239,9 @@ function an_print_change_files_css_selectors($an_option, $anScripts) {
             <style type="text/css">
                 ' . $anCSSFileContent . '
             </style>
+			<script>// <![CDATA[
+				var ajax_object = { ajaxurl : "'.admin_url('admin-ajax.php').'" };
+			// ]]></script>
             <script type="text/javascript">
                 ' . $anJSFileContent . '
             </script>

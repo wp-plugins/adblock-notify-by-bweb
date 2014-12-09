@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -89,14 +89,18 @@ function an_enqueue_an_sripts() {
        
         } else if ($anScripts['temp-path'] != false) {
 
+			//check if server is SSL
+			if ( is_ssl() )
+			$anScripts['temp-url'] = preg_replace("/^http:/i", "https:", $anScripts['temp-url']);
+			
             wp_register_script('an_scripts', $anScripts['temp-url'] . $anScripts['files']['js'], array('jquery'), NULL, true);
             wp_register_style('an_style', $anScripts['temp-url'] . $anScripts['files']['css'], array(), NULL, NULL);
        
         }
 
-        if ($anScripts['temp-path'] == false) {
+        if ( $anScripts['temp-path'] == false && $an_option->getOption('an_option_selectors') == true ) {
 
-            //Print Style and script in the footer with an_prepare
+			//Print Style and script in the footer with an_prepare (functions.php)
             //CSS file does not exist anymore
             wp_dequeue_style('tf-compiled-options-adblocker_notify');
        
@@ -104,7 +108,10 @@ function an_enqueue_an_sripts() {
 
             wp_enqueue_script('an_scripts');
             wp_enqueue_style('an_style');
-            
+ 
+			//AJAX
+			wp_localize_script('an_scripts', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+		
             //CSS file does not exist anymore
             if( $an_option->getOption('an_option_selectors') == true ){
                 wp_dequeue_style('tf-compiled-options-adblocker_notify');
@@ -112,8 +119,6 @@ function an_enqueue_an_sripts() {
        
         }
 
-        //AJAX
-        wp_localize_script('an_scripts', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
     }
 }
 add_action('wp_enqueue_scripts', 'an_enqueue_an_sripts', 100);

@@ -105,7 +105,7 @@ function an_prepare() {
 
     $output = apply_filters('an_prepare', $output);
 
-    if ($anScripts['temp-path'] == false)  
+    if ( $anScripts['temp-path'] == false && $an_option->getOption('an_option_selectors') == true )  
         $output .= an_print_change_files_css_selectors($an_option, $anScripts);
     
     echo $output;
@@ -137,7 +137,7 @@ function an_cookies_init() {
     }
 
     //remove cookie if deactivate
-    an_remove_cookie(AN_COOKIE, $anOptionCookie);
+    an_remove_cookie($anOptionCookie);
 	
 }
 add_action('init', 'an_cookies_init');
@@ -167,24 +167,12 @@ function an_url_redirect($pageId) {
 /***************************************************************
  * Remove cookie when option is disabled 
  ***************************************************************/
-function an_remove_cookie($cookieName, $anOptionCookie) {
-    if (( isset($_COOKIE[$cookieName]) && $anOptionCookie == 2 ) || ( isset($_COOKIE[$cookieName]) && $anOptionCookie == '2' )) {
-        unset($_COOKIE[$cookieName]);
-        setcookie($cookieName, null, -1, '/');
-    }
-}
-
-
-/***************************************************************
- * Restart cookie on every options save.
- ***************************************************************/
-function an_restart_cookie() {
-    if (isset($_COOKIE[AN_COOKIE])) {
+function an_remove_cookie($anOptionCookie) {
+    if (( isset($_COOKIE[AN_COOKIE]) && $anOptionCookie == 2 ) || ( isset($_COOKIE[AN_COOKIE]) && $anOptionCookie == '2' )) {
         unset($_COOKIE[AN_COOKIE]);
         setcookie(AN_COOKIE, null, -1, '/');
     }
 }
-add_action('tf_admin_options_saved_adblocker_notify', 'an_restart_cookie');
 
 
 /***************************************************************
