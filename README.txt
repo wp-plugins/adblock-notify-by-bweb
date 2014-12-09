@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
 Tested up to: 4.0
-Stable tag: 1.2.3
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,9 +47,10 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 = Notice =
 
 * **Your server configuration needs to allow allow_url_fopen (see PHP.ini - allow_url_fopen=On) or at least CURL (fallback)**
-* **Your "/uploads" directory needs to be CHMOD to 0777**
-* May not work properly with cache system (depend on parameters) - ** Do not minify advertisement.js **
+* **Your "/uploads" directory needs to be CHMOD to 0755**
+* May not work properly with cache system (depend on parameters) - **If it does not, try to exclude advertisement.js from minify**
 * Need your user to have Javascript activated (no js option included)
+* Should works with SSL certificate (https), but not tryed (need feedback!)
 
 = How to use it =
 You can notify users with an activated Adblocker software by one of THREE ways !
@@ -92,6 +93,36 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.3.2 =
+* Fix plugin enqueing on activation
+* Fix scripts enqueing when an-path is not defined
+* Fix HTTPs issue
+* Fix modal z-index issue on some site
+
+
+= 1.3.1 =
+* Minor performance improvements
+* MU activation fix
+* Fix header already send warning
+* Fix PHP issue on plugin remove
+
+= 1.3 =
+* Major PHP improvements and fixes
+* Minor JS fixes
+* Better performance (less db requests)
+* Save settings will update temp files content but not name and selectors
+* New svg logo
+
+= 1.2.6 =
+* Php fix for AJAX var
+
+= 1.2.5 =
+* Php fix for CSS enqueing
+
+= 1.2.4 =
+* Php fix for CSS enqueing
+* Remove unnecessary files
 
 = 1.2.3 =
 * JS fix
@@ -144,6 +175,9 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 
 
 == Upgrade Notice ==
+= 1.3 =
+* If you use beta option to generate random slectors, don't forget to flush files after plugin update!
+
 = 1.2 =
 * Please deactivate then reactivate before using.
 * Update the main option settings.
