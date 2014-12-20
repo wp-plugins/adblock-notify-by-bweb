@@ -152,16 +152,16 @@ jQuery(document).ready(function ($) {
 
             }
 
-            an_blocker_counter(['total', 'blocked']);                           //adblocker detected
+            an_blocker_counter(['total', 'blocked']);                       //adblocker detected
 
         } else {
 
             //IF AD BLOCKER IS DEACTIVATED
             if (getCookie('anCookie') == 'true') {
-                an_blocker_counter(['total', 'deactivated']);			//adblocker deactivated	
+                an_blocker_counter(['total', 'deactivated']);				//adblocker deactivated	
                 setCookie('anCookie', '', anOptions.anOptionCookieLife);	//set cookie to true
             } else {
-                an_blocker_counter(['total']);					//no adblocker	
+                an_blocker_counter(['total']);								//no adblocker	
             }
 
         }

@@ -73,7 +73,7 @@ function an_prepare() {
                 'anOptionCookie' => $anOptionCookie,
                 'anOptionCookieLife' => $anOptionCookieLife,
                 'anModalTitle' => $anModalTitle,
-                'anModalText' => do_shortcode($anModalText),
+                'anModalText' => do_shortcode( $anModalText ),
                 'anPageRedirect' => $anPageRedirect,
                 'anPermalink' => $anPermalink,
                 'anOptionModalEffect' => $anOptionModalEffect,
@@ -83,7 +83,7 @@ function an_prepare() {
                 'anOptionModalBxtitle' => $anOptionModalBxtitle,
                 'anAlternativeActivation' => $anAlternativeActivation,
                 'anAlternativeElement' => $anAlternativeElement,
-                'anAlternativeText' => do_shortcode($anAlternativeText),
+                'anAlternativeText' => do_shortcode( $anAlternativeText ),
                 'anAlternativeClone' => $anAlternativeClone,
                 'anAlternativeProperties' => $anAlternativeProperties,
     ));
@@ -269,3 +269,24 @@ function an_hex2rgba($color, $opacity = false) {
     //Return rgb(a) color string
     return $output;
 }
+
+
+/***************************************************************
+ * Reset plugin options
+ ***************************************************************/
+function an_stats_notice() {
+	echo '<div class="updated top"><p><strong>Adblock Notify stats have been successfully cleared.</strong></p></div>';
+}
+
+function an_reset_stats() {
+    $screen = get_current_screen();
+    if ( $screen->id != 'toplevel_page_'. AN_ID )
+        return;
+		
+	if($_GET['an-reset'] == 'true'){
+		
+		delete_option( 'adblocker_notify_counter' );
+		add_action( 'admin_notices', 'an_stats_notice' );
+	}
+}
+add_filter('admin_head', 'an_reset_stats' );

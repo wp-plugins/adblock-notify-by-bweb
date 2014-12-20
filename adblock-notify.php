@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.3.2
+ * Version: 1.4
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -50,7 +50,6 @@ if (!defined('AN_COOKIE')) {
 /***************************************************************
  * Set priority to properly load plugin translation
  ***************************************************************/
-
 function an_translate_load_textdomain() {
     $path = basename(dirname(__FILE__)) . '/languages/';
     load_plugin_textdomain('an-translate', false, $path);
@@ -104,20 +103,18 @@ function an_enqueue_an_sripts() {
             //CSS file does not exist anymore
             wp_dequeue_style('tf-compiled-options-adblocker_notify');
        
-        } else if ($an_option->getOption('an_option_choice') == 2 || $an_option->getOption('an_alternative_activation') == true) {
+        } 
 
-            wp_enqueue_script('an_scripts');
-            wp_enqueue_style('an_style');
- 
-			//AJAX
-			wp_localize_script('an_scripts', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
-		
-            //CSS file does not exist anymore
-            if( $an_option->getOption('an_option_selectors') == true ){
-                wp_dequeue_style('tf-compiled-options-adblocker_notify');
-            }
-       
-        }
+		wp_enqueue_script('an_scripts');
+		wp_enqueue_style('an_style');
+
+		//AJAX
+		wp_localize_script('an_scripts', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+	
+		//CSS file does not exist anymore
+		if( $an_option->getOption('an_option_selectors') == true ){
+			wp_dequeue_style('tf-compiled-options-adblocker_notify');
+		}
 
     }
 }

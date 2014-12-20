@@ -3,8 +3,8 @@ Contributors: brikou
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
-Tested up to: 4.0
-Stable tag: 1.3.2
+Tested up to: 4.1
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,6 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 
 = Notice =
 
-* **Your server configuration needs to allow allow_url_fopen (see PHP.ini - allow_url_fopen=On) or at least CURL (fallback)**
 * **Your "/uploads" directory needs to be CHMOD to 0755**
 * May not work properly with cache system (depend on parameters) - **If it does not, try to exclude advertisement.js from minify**
 * Need your user to have Javascript activated (no js option included)
@@ -93,6 +92,14 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.4 =
+* Minor PHP fixes and improvements
+* Improve scripts & styles enqueuing
+* Fixed logo in dashboard option menu
+* HTTPs issue remain an issue...
+* readme.txt update
+* Tested on WP 4.1 with success!
 
 = 1.3.2 =
 * Fix plugin enqueing on activation

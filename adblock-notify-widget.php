@@ -1,44 +1,61 @@
 <?php
 /***************************************************************
+ * Register the Dashboard Widget display function
+ ***************************************************************/
+function an_dashboard_widgets() {
+    $an_option = TitanFramework::getInstance( 'adblocker_notify' );
+    if (isset($an_option) && $an_option->getOption( 'an_option_stats' ) != 2 ) {
+        wp_add_dashboard_widget( 'an_dashboard_widgets', '<img src="' . AN_URL . 'img/icon-bweb.svg" class="bweb-logo" alt="b*web" style="display:none"/>&nbsp;&nbsp;' . __( 'Adblock Notify Stats', 'an-translate' ), 'an_get_counters' );
+        //Chart JS
+        wp_enqueue_script( 'an_chart_js', AN_URL . 'lib/chart-js/Chart.min.js', array( 'jquery' ), NULL );
+        //CSS & JS
+        add_action( 'admin_enqueue_scripts', 'an_register_admin_scripts' );
+    }
+}
+add_action( 'wp_dashboard_setup', 'an_dashboard_widgets' );
+
+
+/***************************************************************
  * Page views & page blocked counter
  ***************************************************************/
 function an_adblock_counter() {
-    if (current_user_can('manage_options') || empty($_POST['an_state']))
+    if (current_user_can( 'manage_options' ) || empty( $_POST['an_state'] ) )
         return;
 
-    $an_states = $_POST['an_state'];
-    $anCount = get_option('adblocker_notify_counter');
+    $an_states = $_POST[ 'an_state' ];
+    $anCount = get_option( 'adblocker_notify_counter' );
 
-    foreach ($an_states as $an_state) {
-        if (empty($anCount)) {
-            $anCount = array('total' => 0, 'blocked' => 0, 'deactivated' => 0, 'history' => array());
-            add_option('adblocker_notify_counter', $anCount);
+    foreach ( $an_states as $an_state ) {
+		
+        if ( empty( $anCount ) ) {
+            $anCount = array( 'total' => 0, 'blocked' => 0, 'deactivated' => 0, 'history' => array() );
+            add_option( 'adblocker_notify_counter', $anCount );
         }
 
         //update option with new values
         $anCount[$an_state] ++;
 
         //then update history
-        $anCount = an_history_counter($anCount, $an_state);
+        $anCount = an_history_counter( $anCount, $an_state );
     }
 
     //update db	
-    update_option('adblocker_notify_counter', $anCount);
+    update_option( 'adblocker_notify_counter', $anCount );
 
 
     exit;
 }
-add_action('wp_ajax_call_an_adblock_counter', 'an_adblock_counter');
-add_action('wp_ajax_nopriv_call_an_adblock_counter', 'an_adblock_counter');
+add_action( 'wp_ajax_call_an_adblock_counter', 'an_adblock_counter' );
+add_action( 'wp_ajax_nopriv_call_an_adblock_counter', 'an_adblock_counter' );
 
 
 /***************************************************************
  * Calcul date diff
  ***************************************************************/
-function an_date_diff($toDay, $toCheck) {
-    $todayObj = new DateTime($toDay);
-    $expiredObj = new DateTime($toCheck);
-    $dateDiff = $todayObj->diff($expiredObj);
+function an_date_diff( $toDay, $toCheck ) {
+    $todayObj = new DateTime( $toDay );
+    $expiredObj = new DateTime( $toCheck );
+    $dateDiff = $todayObj->diff( $expiredObj );
     return $dateDiff->days;
 }
 
@@ -215,19 +232,3 @@ function an_get_counters() {
 
     echo $output;
 }
-
-
-/***************************************************************
- * Register the Dashboard Widget display function
- ***************************************************************/
-function an_dashboard_widgets() {
-    $an_option = TitanFramework::getInstance('adblocker_notify');
-    if (isset($an_option) && $an_option->getOption('an_option_stats') != 2) {
-        wp_add_dashboard_widget('an_dashboard_widgets', '<img src="' . AN_URL . 'img/icon-bweb.svg" class="bweb-logo" alt="b*web"/>&nbsp;&nbsp;' . __('Adblock Notify Stats', 'an-translate'), 'an_get_counters');
-        //Chart JS
-        wp_enqueue_script('an_chart_js', AN_URL . 'lib/chart-js/Chart.min.js', array('jquery'), NULL);
-        //CSS & JS
-        add_action('admin_enqueue_scripts', 'an_register_admin_scripts');
-    }
-}
-add_action('wp_dashboard_setup', 'an_dashboard_widgets');
