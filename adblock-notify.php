@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.4.1
+ * Version: 1.4.2
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate

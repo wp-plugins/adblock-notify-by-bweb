@@ -101,7 +101,7 @@ function an_prepare() {
         }
     }
 
-    $output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
+    $output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden; bottom: -1000px;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
 
     $output = apply_filters('an_prepare', $output);
 
