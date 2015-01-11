@@ -101,7 +101,7 @@ function an_prepare() {
         }
     }
 
-    $output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; visibility: hidden; bottom: -1000px;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
+    $output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; height:1px; width:1px; visibility: hidden; top: -1px; left: 0;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
 
     $output = apply_filters('an_prepare', $output);
 
@@ -118,9 +118,7 @@ add_action('wp_footer', 'an_prepare');
  * prevent Header already sent notice
  ***************************************************************/
 function an_cookies_init() {
-    
 	$an_option = unserialize(get_option('adblocker_notify_options'));
-
     $anOptionCookie = $an_option['an_option_cookie'];
     $anPageNojsActivation = $an_option['an_page_nojs_activation'];
     $anPageNojsRedirect = $an_option['an_page_nojs_redirect'];
@@ -138,7 +136,6 @@ function an_cookies_init() {
 
     //remove cookie if deactivate
     an_remove_cookie($anOptionCookie);
-	
 }
 add_action('init', 'an_cookies_init');
 

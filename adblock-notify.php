@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Adblock Notify by b*web
- * Plugin URI: http://b-website.com/
+ * Plugin URI: http://b-website.com/adblock-notify-plugin-for-wordpress
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.4.2
+ * Version: 1.4.3
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -13,12 +13,6 @@
 /***************************************************************
  * SECURITY : Exit if accessed directly
  ***************************************************************/
-if (!function_exists('add_action')) {
-    header('Status: 403 Forbidden');
-    header('HTTP/1.1 403 Forbidden');
-    exit();
-}
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -72,7 +66,6 @@ foreach ($anFiles as $anFile) {
 /***************************************************************
  * Front-End Scripts & Styles enqueueing
  ***************************************************************/
-
 function an_enqueue_an_sripts() {
     if (!is_admin()) {
 
@@ -124,7 +117,6 @@ add_action('wp_enqueue_scripts', 'an_enqueue_an_sripts', 100);
 /***************************************************************
  * Back-End Scripts & Styles enqueueing
  ***************************************************************/
-
 function an_register_admin_scripts() {
     //JS
     wp_enqueue_script('an_admin_scripts', AN_URL . 'js/an-admin-scripts.js', array('jquery'), NULL, true);
@@ -158,10 +150,9 @@ add_filter('plugin_action_links_' . AN_BASE, 'an_settings_link');
  * Add custom meta link on plugin list page
  ***************************************************************/
 function an_meta_links($links, $file) {
-	if (strpos($file, 'adblock-notify.php') !== false) {
-		$links[0] = '<a href="http://b-website.com/" target="_blank"><img src="' . AN_URL . 'img/icon-bweb.svg" style="margin-bottom: -4px; width: 18px;" alt="b*web"/></a>&nbsp;&nbsp;' . $links[0];
+	if ( $file === 'adblock-notify-by-bweb/adblock-notify.php' ) {
 		$links[] = '<a href="http://b-website.com/category/plugins" target="_blank" title="' . __('More b*web Plugins', 'an-translate') . '">' . __('More b*web Plugins', 'an-translate') . '</a>';
-		$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8" target="_blank" title="' . __('Donate', 'an-translate') . '"><strong>' . __('Donate', 'an-translate') . '</strong></a>';
+		$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8" target="_blank" title="' . __( 'Donate to this plugin &#187;' ) . '"><strong>' . __( 'Donate to this plugin &#187;' ) . '</strong></a>';
 	}
 	return $links;
 }
@@ -207,7 +198,6 @@ if (function_exists('register_uninstall_hook')) {
 
 //Remove directory
 function an_delete_temp_folder($dirPath) {
-	
 	if( file_exists( $dirPath ) ) {
   
 		$files = glob($dirPath . '*', GLOB_MARK);
@@ -218,15 +208,12 @@ function an_delete_temp_folder($dirPath) {
 				unlink($file);
 			}
 		}
-		
 			rmdir($dirPath);
 	}
-		
 }
 
 //Uninstall function
 function adblocker_notify_uninstall() {
-   
     // Remove temp files
     $anTempDir = unserialize(get_option('adblocker_notify_selectors'));
     an_delete_temp_folder($anTempDir['temp-path']);
@@ -242,5 +229,4 @@ function adblocker_notify_uninstall() {
     delete_option('adblocker_notify_options');
     delete_option('adblocker_notify_counter');
     delete_option('adblocker_notify_selectors');
-	
 }
