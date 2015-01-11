@@ -6,7 +6,7 @@
 
 /*Dashboard Widget*/
 #an_dashboard_widgets img.bweb-logo{
-	display: inline-block;
+	display: inline-block !important;
 	margin-bottom: -3px;
 	height: 18px;
 }
