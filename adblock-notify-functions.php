@@ -4,7 +4,8 @@
  ***************************************************************/
 function an_prepare() {
     $an_option = TitanFramework::getInstance('adblocker_notify');
-
+	$output = '';
+	
     //Retrieve options
     //General Options
     $anOptionChoice = $an_option->getOption('an_option_choice');
