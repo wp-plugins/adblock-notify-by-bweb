@@ -6,7 +6,7 @@
 
 /*Dashboard Widget*/
 #an_dashboard_widgets img.bweb-logo{
-	display: inline-block;
+	display: inline-block !important;
 	margin-bottom: -3px;
 	height: 18px;
 }
@@ -40,6 +40,10 @@
 	float: left;
 	position:relative;
 }
+.an-canvas-container-donut canvas{
+	width:100% !important;
+	height:100% !important;
+}
 .an-canvas-container-donut,
 #an_dashboard_widgets .inside{
 	text-align:center
@@ -50,28 +54,28 @@
 	margin-top:10px;
 }
 .an-average{
-	position:absolute;
-	left:50%;
-	top:77px;
-	font-size:1.45em;
-	font-weight:700;
-	display:inline-block;
-	width:85px;
-	text-align:center;
-	margin-left:-43px
+	font-size: 1.5em;
+	font-weight: 700;
+	text-align: center;
+	margin-top: 15px;
 }
 .an-average span {
 	text-align: center;
-	font-size: .5em;
+	font-size: .55em;
 	display: block;
 	height: 12px;
 	line-height: 12px;
+	font-weight: normal;
 }
 #an-canvas-container-line{
 	margin-top:5px;
 	width:100%;
 }
-
+.an-deactivated {
+	clear: both;
+	margin: 0;
+	padding-top: 5px;
+}
 /*TitanFramework Admin Page*/
 div.error.warning{
 	border-left: 4px solid #FFAE00;
