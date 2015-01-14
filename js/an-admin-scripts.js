@@ -8,24 +8,28 @@ jQuery(document).ready(function($) {
 	if ($('.an-stats-table').length > 0){
 
 		//Widget
-		var doughnutData = [
+		var DataTotal = [
 				{
 					value: anWidgetOptions.totalNoBlocker,
-					color:"#34495e"
+					color:"#34495e",
+					highlight: "#36526F"
 				},
 				{
 					value : anWidgetOptions.anCountBlocked,
-					color : "#e74c3c"
+					color : "#e74c3c",
+					highlight: "#F44938"
 				}			
 			];
-		var doughnutDataToday = [
+		var DataToday = [
 				{
 					value: anWidgetOptions.totalNoBlockerToday,
-					color:"#34495e"
+					color:"#34495e",
+					highlight: "#36526F"
 				},
 				{
 					value : anWidgetOptions.anCountBlockedHistory,
-					color : "#e74c3c"
+					color : "#e74c3c",
+					highlight: "#F44938"
 				}			
 			];
 		
@@ -33,29 +37,40 @@ jQuery(document).ready(function($) {
 			labels : ["Today","Day -1","Day -2","Day -3","Day -4","Day -5","Day -6"],
 			datasets : [
 				{
-					fillColor : "rgba(50, 82, 110,0.5)",
+					fillColor : "rgba(50, 82, 110,0.2)",
 					strokeColor : "rgba(50, 82, 110,0.8)",
-					pointColor : "rgba(250,250,250,1)",
+					pointColor : "rgba(50, 82, 110,1)",
 					pointStrokeColor : "rgba(50, 82, 110,1)",
+					pointHighlightFill: "rgba(250,250,250,1)",
+					pointHighlightStroke: "rgba(50, 82, 110,1)",
 					data : anWidgetOptions.anDataHistotyTotal
 				},
 				{
-					fillColor : "rgba(231, 76, 60,0.6)",
+					fillColor : "rgba(231, 76, 60,0.2)",
 					strokeColor : "rgba(173, 52, 40,0.8)",
-					pointColor : "rgba(250,250,250,0.8)",
-					pointStrokeColor : "#e74c3c",
+					pointColor : "rgba(231, 76, 60, 1)",
+					pointStrokeColor : "rgba(231, 76, 60, 1)",
+					pointHighlightFill: "rgba(250,250,250,0.8)",
+					pointHighlightStroke: "rgba(173, 52, 40,0.8)",
 					data : anWidgetOptions.anDataHistotyBlocked
 				}
 			]			
 		}
-		var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
-		var widthdonut = $("#an_dashboard_widgets .inside .an-canvas-container-donut").width();
-		var widthline = $("#an_dashboard_widgets .inside").width();
-		$("canvas").attr("width",widthdonut);
-		$("canvas#an-canvas-line").attr("width",widthline);
-		var myDoughnut = new Chart(document.getElementById("an-canvas-donut").getContext("2d")).Doughnut(doughnutData);
-		var myDoughnut = new Chart(document.getElementById("an-canvas-donut-today").getContext("2d")).Doughnut(doughnutDataToday);
-		var myLine = new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData);
+		//Load the charts
+		new Chart(document.getElementById("an-canvas-donut").getContext("2d")).Doughnut(DataTotal, {
+			tooltipFontSize: 12,
+			responsive: true
+		});
+		new Chart(document.getElementById("an-canvas-donut-today").getContext("2d")).Doughnut(DataToday, {
+			tooltipFontSize: 12,
+			responsive: true
+		});
+		new Chart(document.getElementById("an-canvas-line").getContext("2d")).Line(lineChartData, {
+			tooltipFontSize: 12,
+			tooltipTitleFontSize: 12,
+			scaleFontSize: 10,
+			responsive: true,
+		});
 		
 		//Admin page
 		resetButton = $('p.submit button.button-secondary[value!="save"]');

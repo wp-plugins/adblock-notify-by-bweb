@@ -1,4 +1,13 @@
 <?php
+/***************************************************************
+ * SECURITY : Exit if accessed directly
+***************************************************************/
+if ( !defined( 'ABSPATH' ) ) {
+	die( 'Direct acces not allowed!' );
+}
+
+
+
 add_action('tf_create_options', 'an_create_options');
 function an_create_options() {
 

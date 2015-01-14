@@ -1,5 +1,13 @@
 <?php
 /***************************************************************
+ * SECURITY : Exit if accessed directly
+***************************************************************/
+if ( !defined( 'ABSPATH' ) ) {
+	die( 'Direct acces not allowed!' );
+}
+
+
+/***************************************************************
  * Insert elements in the DOM : HTML & SCRIPT
  ***************************************************************/
 function an_prepare() {
@@ -281,8 +289,7 @@ function an_reset_stats() {
     if ( $screen->id != 'toplevel_page_'. AN_ID )
         return;
 		
-	if($_GET['an-reset'] == 'true'){
-		
+	if( isset( $_GET[ 'an-reset' ] ) && $_GET[ 'an-reset' ] == 'true' ){
 		delete_option( 'adblocker_notify_counter' );
 		add_action( 'admin_notices', 'an_stats_notice' );
 	}

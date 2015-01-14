@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 * User Friendly
 * Many design options & custom CSS available
 * Smooth admin panel for an easy and fast setup (thanks to [Titan Framework](http://www.titanframework.net/))
-* Statistics on you WordPress Dashboard
+* Statistics on you WordPress Dashboard with [chart.js](http://www.chartjs.org/)
 * Follow WordPress best practices
 * Support for all kind of ads, included asynchronous
 * Support Images and shortcodes (eg: [PayPal button](https://www.paypal.com/us/cgi-bin/?cmd=_donate-intro-outside/))
@@ -46,9 +46,8 @@ Adblock Notify is a very easy to use plugin with get around options and a lot of
 
 = Notice =
 
-* **Your "/uploads" directory needs to be CHMOD to 0755**
+* **Your "/uploads" directory needs to be CHMOD to 0755** (Don't worry, it is the default CHMOD)
 * May not work properly with cache system (depend on parameters) - **If it does not, try to exclude advertisement.js from minify**
-* Need your user to have Javascript activated (no js option included)
 * Should works with SSL certificate (https), but not tryed (need feedback!)
 
 = How to use it =
@@ -92,6 +91,13 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.4.5 =
+* Minor security improvements
+* Titan Framework update (1.7.3)
+* Chart.js library update
+* Better responsiv support on dashboard charts
+* Added charts data on hover
 
 = 1.4.4 =
 * Fix minor PHP warnings
