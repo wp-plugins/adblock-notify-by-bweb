@@ -20,8 +20,8 @@ jQuery(document).ready(function ($) {
             }
 
             //launch SECOND test (jQuery) - check adsense element height
-            if ($an_state !== true && $('#adsense.an-sponsored').length > 0) {
-                if ($('#adsense.an-sponsored').outerHeight() == 0) {
+            if ( $('#adsense.an-sponsored').length > 0 ) {
+                if ($('#adsense.an-sponsored .an-advert-banner').outerHeight() == 0 ) {
                     $an_state = true;
                     $('#adsense.an-sponsored').remove();
                 }

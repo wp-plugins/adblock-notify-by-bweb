@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.4.5
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,14 @@ You can notify users with an activated Adblocker software by one of THREE ways !
 
 * WordPress 3.7+ (not tested on above versions, but may works)
 
+= Supported languages =
+* English [en_US]
+* French [fr_FR]
+* Serbian [sr_RS] - Thanks to Ogi Djuraskovic - [firstsiteguide.com](http://firstsiteguide.com "firstsiteguide.com")
+
+Become a translator and send me your translation! [Contact-me](http://b-website.com/contact "Contact")
+
+[CHECK OUT MY OTHER PLUGINS](http://b-website.com/category/plugins-en "More plugins by b*web")
 
 
 == Installation ==
@@ -91,6 +99,12 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.5 =
+* Fix major issue after regarding JS detection (previous file name has been whitlisted)
+* Better js detection
+* Serbian translation by Ogi Djuraskovic - [firstsiteguide.com](http://firstsiteguide.com "firstsiteguide.com")
+* readme.txt update
 
 = 1.4.5 =
 * Minor security improvements
