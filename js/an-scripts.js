@@ -8,18 +8,14 @@ jQuery(document).ready(function ($) {
     //define global testing var
     var $an_state = null;
 
-    /*  Detection
+	 /*  Detection
      /* ------------------------------------ */
+	 
     $(window).load(function () {
 
         setTimeout(function () {
 
-            //launch FIRST test (js file) - check if advertisement is blocked or not
-            if ($.adblockJsFile === undefined) {
-                $an_state = true;
-            }
-
-            //launch SECOND test (jQuery) - check adsense element height
+            //launch FIRST test (jQuery) - check adsense element height
             if ( $('#adsense.an-sponsored').length > 0 ) {
                 if ($('#adsense.an-sponsored .an-advert-banner').outerHeight() == 0 ) {
                     $an_state = true;
@@ -27,8 +23,22 @@ jQuery(document).ready(function ($) {
                 }
             }
 
-            //do action
-            an_message_display($an_state);
+            //launch SECOND test with fuckadblock script (js file)
+            function adBlockDetected() {
+				$an_state = true;
+				//do action
+				an_message_display($an_state);
+            }
+			function adBlockNotDetected() {
+				//do action
+				an_message_display($an_state);
+			}
+			if(typeof fuckAdBlock === 'undefined') {
+				adBlockDetected();
+			} else {
+				fuckAdBlock.onDetected(adBlockDetected);
+				fuckAdBlock.onNotDetected(adBlockNotDetected);
+			}
 
         }, 100);
 
