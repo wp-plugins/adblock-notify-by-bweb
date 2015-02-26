@@ -3,12 +3,28 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/adblock-notify-plugin-for-wordpress
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.6
+ * Version: 1.6.1
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
  * Domain Path: /languages
  */
+ 
+/*  Copyright 2015  Brice CAPOBIANCO  (contact : http://b-website.com/contact)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2, as 
+    published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 
 /***************************************************************
  * SECURITY : Exit if accessed directly
@@ -68,16 +84,17 @@ foreach ($anFiles as $anFile) {
  ***************************************************************/
 function an_enqueue_an_sripts() {
     if (!is_admin()) {
-
+		$anVersion =  '1.6.1';
         $anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
         $an_option = TitanFramework::getInstance('adblocker_notify');
 
-        wp_enqueue_script('an_fuckadblock', AN_URL . 'js/an-detect.min.js', array( 'jquery' ), NULL, true );
+        //Disabled due to too many bug repports
+		//wp_enqueue_script('an_fuckadblock', AN_URL . 'js/an-detect.min.js', array( 'jquery' ), NULL, true );
 
         if ( $an_option->getOption('an_option_selectors') == false ) {
 
-            wp_register_script( 'an_scripts', AN_URL . 'js/an-scripts.min.js', array( 'jquery' ), NULL, true );
-            wp_register_style( 'an_style', AN_URL . 'css/an-style.min.css', array(), NULL, NULL );
+            wp_register_script( 'an_scripts', AN_URL . 'js/an-scripts.min.js', array( 'jquery' ),  $anVersion, true );
+            wp_register_style( 'an_style', AN_URL . 'css/an-style.min.css', array(),  $anVersion, NULL );
        
         } else if ($anScripts['temp-path'] != false) {
 
@@ -85,8 +102,8 @@ function an_enqueue_an_sripts() {
 			if ( is_ssl() )
 			$anScripts['temp-url'] = preg_replace( '/^http:/i', 'https:', $anScripts['temp-url'] );
 			
-            wp_register_script( 'an_scripts', $anScripts['temp-url'] . $anScripts['files']['js'], array('jquery'), NULL, true );
-            wp_register_style( 'an_style', $anScripts['temp-url'] . $anScripts['files']['css'], array(), NULL, NULL );
+            wp_register_script( 'an_scripts', $anScripts['temp-url'] . $anScripts['files']['js'], array('jquery'), $anVersion, true );
+            wp_register_style( 'an_style', $anScripts['temp-url'] . $anScripts['files']['css'], array(),  $anVersion, NULL );
        
         }
 

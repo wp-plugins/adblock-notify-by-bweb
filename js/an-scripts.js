@@ -24,7 +24,8 @@ jQuery(document).ready(function ($) {
             }
 
             //launch SECOND test with fuckadblock script (js file)
-            function adBlockDetected() {
+        	//Disabled due to too many bug repports
+            /*function adBlockDetected() {
 				$an_state = true;
 				//do action
 				an_message_display($an_state);
@@ -38,9 +39,11 @@ jQuery(document).ready(function ($) {
 			} else {
 				fuckAdBlock.onDetected(adBlockDetected);
 				fuckAdBlock.onNotDetected(adBlockNotDetected);
-			}
+			}*/
 
-        }, 100);
+			an_message_display($an_state);
+
+        }, 500);
 
     });
 
@@ -61,8 +64,8 @@ jQuery(document).ready(function ($) {
 
                 $('#an-Modal').prepend('<h1 ' + headingColor + '>' + anOptions.anModalTitle + '</h1>' + anOptions.anModalText + '<a class="close-reveal-modal">&#215;</a>');
 
-                $('#an-Modal').bind('reveal:open', function () {                    //on modale box open
-                    $('.reveal-modal-bg').css({                                     //apply custom style
+                $('#an-Modal').bind('reveal:open', function () {                    	//on modale box open
+                    $('.reveal-modal-bg').css({                                     	//apply custom style
                         'background': anOptions.anOptionModalOverlay
                     });
 
@@ -74,15 +77,15 @@ jQuery(document).ready(function ($) {
                 });
 
                 $('#an-Modal').reveal({
-                    animation: anOptions.anOptionModalEffect,                       //fade, fadeAndPop, none
-                    animationspeed: anOptions.anOptionModalspeed,                   //how fast animtions are
-                    closeonbackgroundclick: anOptions.anOptionModalclose,           //if you click background will modal close?
-                    dismissmodalclass: 'close-reveal-modal'                         //the class of a button or element that will close an open modal
+                    animation: anOptions.anOptionModalEffect,                       	//fade, fadeAndPop, none
+                    animationspeed: anOptions.anOptionModalspeed,                  	 	//how fast animtions are
+                    closeonbackgroundclick: anOptions.anOptionModalclose,           	//if you click background will modal close?
+                    dismissmodalclass: 'close-reveal-modal'                         	//the class of a button or element that will close an open modal
                 }).trigger('reveal:open');
 
-                $('#an-Modal').bind('reveal:close', function () {                   //on modale box close
-                    $('#an-Modal p, #an-Modal a').fadeOut(150);                     //fix for visual elements
-                    setCookie('anCookie', 'true', anOptions.anOptionCookieLife);    //set cookie to true
+                $('#an-Modal').bind('reveal:close', function () {                   	//on modale box close
+                    $('#an-Modal p, #an-Modal a').fadeOut(150);                     	//fix for visual elements
+                    setCookie('anCookie', 'true', anOptions.anOptionCookieLife, '/');   //set cookie to true
                     setTimeout(function () {
                         $('#an-Modal, .reveal-modal-bg').remove();
                     }, anOptions.anOptionModalspeed);
@@ -90,8 +93,8 @@ jQuery(document).ready(function ($) {
 
                 //IF PAGE REDIRECT IS ACTIVATED
             } else if (anOptions.anOptionChoice == 3 && anOptions.anPermalink !== 'undefined' && getCookie('anCookie') !== 'true') {
-                setCookie('anCookie', 'true', anOptions.anOptionCookieLife);        //set cookie to true
-                window.location.replace(anOptions.anPermalink);                     //redirect to user page
+                setCookie('anCookie', 'true', anOptions.anOptionCookieLife, '/');      	//set cookie to true
+                window.location.replace(anOptions.anPermalink);                     	//redirect to user page
             }
 
             //IF AD PLACEHOLDER IS ACTIVATED
@@ -162,16 +165,16 @@ jQuery(document).ready(function ($) {
 
             }
 
-            an_blocker_counter(['total', 'blocked']);                       //adblocker detected
+            an_blocker_counter(['total', 'blocked']);                       	//adblocker detected
 
         } else {
 
             //IF AD BLOCKER IS DEACTIVATED
             if (getCookie('anCookie') == 'true') {
-                an_blocker_counter(['total', 'deactivated']);				//adblocker deactivated	
-                setCookie('anCookie', '', anOptions.anOptionCookieLife);	//set cookie to true
+                an_blocker_counter(['total', 'deactivated']);					//adblocker deactivated	
+                setCookie('anCookie', '', anOptions.anOptionCookieLife, '/');	//set cookie to true
             } else {
-                an_blocker_counter(['total']);								//no adblocker	
+                an_blocker_counter(['total']);									//no adblocker	
             }
 
         }
@@ -198,8 +201,8 @@ jQuery(document).ready(function ($) {
     }
 
     /*  Fetch all DEFINED Element CSS Properties
-     /*  Source: http://stackoverflow.com/a/5830517
-     /* ------------------------------------ */
+    /*  Source: http://stackoverflow.com/a/5830517
+    /* ------------------------------------ */
     function getStyleObjectCss(element) {
         var sheets = document.styleSheets, o = {};
         for (var i in sheets) {
@@ -241,8 +244,8 @@ jQuery(document).ready(function ($) {
     }
 
     /*  Fetch ALL Element CSS Properties
-     /*  Source: http://stackoverflow.com/a/5830517
-     /* ------------------------------------ */
+    /*  Source: http://stackoverflow.com/a/5830517
+    /* ------------------------------------ */
     $.fn.getStyleObject = function () {
         var dom = this.get(0);
         var style;
@@ -281,14 +284,15 @@ jQuery(document).ready(function ($) {
     }
 
     /*  Initiate cookies functions
-     /* ------------------------------------ */
-    function setCookie(cname, cvalue, exdays) {
+    /* ------------------------------------ */
+	function setCookie(cname, cvalue, exdays, cpath) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires=" + d.toGMTString();
-        document.cookie = cname + "=" + cvalue + "; " + expires;
+        var path = "path=" + cpath;
+        document.cookie = cname + "=" + cvalue + "; " + expires + "; " + path;
     }
-    function getCookie(cname) {
+	function getCookie(cname) {
         var name = cname + "=";
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
