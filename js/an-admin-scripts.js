@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
 				{
 					value: anWidgetOptions.totalNoBlocker,
 					color:"#34495e",
-					highlight: "#36526F"
+ 					highlight: "#36526F"
 				},
 				{
 					value : anWidgetOptions.anCountBlocked,
@@ -58,10 +58,12 @@ jQuery(document).ready(function($) {
 		}
 		//Load the charts
 		new Chart(document.getElementById("an-canvas-donut").getContext("2d")).Doughnut(DataTotal, {
+ 			segmentStrokeColor : '#fafafa',
 			tooltipFontSize: 12,
 			responsive: true
 		});
 		new Chart(document.getElementById("an-canvas-donut-today").getContext("2d")).Doughnut(DataToday, {
+ 			segmentStrokeColor : '#fafafa',
 			tooltipFontSize: 12,
 			responsive: true
 		});

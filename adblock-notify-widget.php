@@ -181,10 +181,10 @@ function an_get_counters() {
         $averageToday = round( ( $anCount['history'][0]['blocked'] / $anCount['history'][0]['total'] ) * 100, 2 );
     }
     
-    $output .= '
+    $output = '
         <table class="an-stats-table">
 			<tr class="an-top">
-			  <td><a href="#" class="antooltip" data-antooltip="' . __('Admins are excluded from this statistics.', 'an-translate') . '"><span class="dashicons dashicons-info"></span></a></td>
+			  <td><span class="antooltip" data-antooltip="' . __('Admins are excluded from this statistics.', 'an-translate') . '"><span class="dashicons dashicons-info"></span></span></td>
 			  <td>' . __('Total', 'an-translate') . '</td> 
 			  <td>' . __('Today', 'an-translate') . '</td>
 			</tr>
@@ -211,16 +211,21 @@ function an_get_counters() {
         </div>
         <p class="an-deactivated">
 			<strong>' . $anCount['deactivated'] . '</strong> ' . __('Ad Blocker software deactivated', 'an-translate') . '
-			<a href="#" class="antooltip" data-antooltip="' . __('You may probably increase this number by improving your custom messages', 'an-translate') . '."><span class="dashicons dashicons-info"></span></a>
+			<span class="antooltip" data-antooltip="' . __('You may probably increase this number by improving your custom messages', 'an-translate') . '."><span class="dashicons dashicons-info"></span></span>
         </p>
         <div id="an-canvas-container-line">
 			<canvas id="an-canvas-line"></canvas>
         </div>
-        <p>
-			<a href="options-general.php?page=' . AN_ID . '" class="button button button-primary action">' . __('Settings', 'an-translate') . '</a>
-			&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp
-			<a href="options-general.php?page=' . AN_ID . '&an-reset=true"  onclick="javascript:if(!confirm(\'' . __('Are you sure you want to delete permanently your datas?', 'an-translate') . '\')) return false;" class="button action">' . __('Reset Stats', 'an-translate') . '</a>
-        </p>';
+		<ul class="subsubsub">
+			<li class="an-options">
+				<a href="options-general.php?page=' . AN_ID . '">' . __('Settings', 'an-translate') . '</a> |
+			</li>
+			<li class="an-reset">
+				<a href="options-general.php?page=' . AN_ID . '&an-reset=true"  
+				onclick="javascript:if(!confirm(\'' . __('Are you sure you want to delete permanently your datas?', 'an-translate') . '\')) return false;" 
+				>' . __('Reset Stats', 'an-translate') . '</a>
+			</li>
+		</ul>';
 
     $output .= '<script type="text/javascript">';
     $output .= '/* <![CDATA[ */';

@@ -10,21 +10,15 @@
 	margin-bottom: -3px;
 	height: 18px;
 }
-#an_dashboard_widgets a.antooltip {
+#an_dashboard_widgets span.antooltip {
 	text-align: center;
 }
-#an_dashboard_widgets a.antooltip .dashicons {
+#an_dashboard_widgets span.antooltip .dashicons {
 	color:#bbb; 
 	font-size: 1.3em;
 }
 .an-stats-table {
 	width: 100%;
-}
-.an-stats-table, 
-.an-stats-table td, 
-.an-stats-table th {
-	border: 1px solid #f8f8f8;
-	border-collapse:collapse;
 }
 .an-stats-table .an-top td:first-child {
 	text-align: right;
@@ -32,9 +26,6 @@
 .an-stats-table .an-top {
 	font-weight:bold;
 } 
-.an-top {
-	background-color: #f8f8f8;
-}
 .an-canvas-container-donut {
 	width:50%;
 	float: left;
@@ -47,6 +38,11 @@
 .an-canvas-container-donut,
 #an_dashboard_widgets .inside{
 	text-align:center
+}
+#an_dashboard_widgets .inside{
+	background: #fafafa;
+	margin: 0;
+	padding: 11px 12px 0 12px;
 }
 #an-canvas-donut,
 #an-canvas-donut-today {
@@ -76,6 +72,19 @@
 	margin: 0;
 	padding-top: 5px;
 }
+#an_dashboard_widgets .subsubsub {
+	float: none;
+	border-top: 1px solid #eee;
+	margin-top: 0;
+	padding: 8px 12px 4px;
+	text-align: left;
+	margin: 12px -12px 5px -12px;
+	background-color: #fff;
+}
+#an_dashboard_widgets .subsubsub li {
+	color: #ddd;
+}
+
 /*TitanFramework Admin Page*/
 div.error.warning{
 	border-left: 4px solid #FFAE00;
