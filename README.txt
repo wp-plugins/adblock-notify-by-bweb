@@ -85,11 +85,9 @@ Become a translator and send me your translation! [Contact-me](http://b-website.
 Yes, and probably with all kinf of content hidden by an adblocker software.
 
 = Is it compatible with caching systeme =
-Yes it is, but you have to exclude "advertisement.js" from the cache files list.
+Yes it is.
 
 = The plugin is activated and setting up, but nothing append. =
-Please, inspect your page and search for an_admin_scripts.js or advertisement.js.
-If they are not visible on your page DOM, there is probably a problem with your caching/minify plugin.
 Purge all cache and rebuild your minify, then check again.
 You can also try to open a new private tab to have a new "clean" test environment.
 If you don't have any caching/minify plugin, it is mostly due to your theme which does not contain the required wp_footer() function in the footer.php file.
@@ -104,6 +102,7 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 = 1.6.2 =
 * Fix a PHP warning in the dashboard widget
 * Smoother design integration in the dashboard widget 
+* readme.txt update
 
 = 1.6.1 =
 * Disable fuckadblock.js because of to many bug repports
