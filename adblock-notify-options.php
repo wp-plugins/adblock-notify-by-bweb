@@ -122,7 +122,7 @@ function an_create_options() {
         'step' => '1',
     ));
     $generalTab->createOption(array(
-        'name' => '<strong class="an-red">BETA</strong> ' . __('Random selectors and files', 'an-translate'),
+        'name' => __('Random selectors and files', 'an-translate'),
         'type' => 'heading',
     ));
     $generalTab->createOption(array(
@@ -252,7 +252,6 @@ function an_create_options() {
                 <br /><br /><strong class="an-red">' . __('This selector will be changed during settings update by a random new one to prevent adblock to hide this element. All the CSS and JS files are parsed to be updated with this new selectors. That is why you have to add your custom style in the above field and not in you theme stylesheet.', 'an-translate') . '</strong>',
         'lang' => 'css',
     ));
-
     //Redirection Options
     $redirectTab->createOption(array(
         'name' => __('Target Page', 'an-translate'),

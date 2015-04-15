@@ -3,14 +3,16 @@ Contributors: brikou
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
-Tested up to: 4.1
-Stable tag: 1.6.2
+Tested up to: 4.2
+Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Detect Adblock and nofity users. Simple plugin with get around options and a lot of settings. Dashboard widget with counter & statistics included!
 
 == Description ==
+
+<blockquote>Adblock Notify has been blacklisted by adblocker softwares but it is still working properly with the "Random selectors and files" option. Make sure to disable your adblocker to view screenshots in WordPress.org and in your admin area to view all the plugin's options fields and the dashboard widget.</blockquote>
 
 Detect Adblock and nofity users. Help to block adblock (eg: Adblock Plus) and increase your ad revenue.
 Adblock Notify is a very easy to use plugin with get around options and a lot of settings. A smart dashboard widget with counter & statistics is included!
@@ -98,6 +100,11 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.7 =
+* Titan Framework update (1.7.5)
+* Tested on WP 4.2 with success!
+* readme.txt update
 
 = 1.6.2 =
 * Fix a PHP warning in the dashboard widget

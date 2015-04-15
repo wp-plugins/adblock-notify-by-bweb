@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: framework, options, admin, admin panel, meta box, theme customizer, option framework, library, sdk, edd, settings, api, theme creator, theme framework
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 1.7.3
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,17 +14,21 @@ The most easy to use WordPress option framework.
 
 Titan Framework allows theme and plugin developers to create a admin pages, options, meta boxes, and theme customizer options with just a few simple lines of code.
 
+This means faster theme & plugin creation for everyone.
+
 = The Goal =
 
-Titan Framework aims to be easily used by everyone. The goal is to make it plug and play - just activate the plugin and start creating your options. Read our guide on how to [Get Started with Titan Framework](http://www.titanframework.net/get-started/)
+Titan Framework aims to be easily used by everyone. The goal is to make it plug and play - just activate the plugin and start creating your options. Read our guide on how to [Get Started with Titan Framework](http://www.titanframework.net/how/)
 
 * [Documentation and Tutorials for Developers](http://www.titanframework.net/docs)
 * [Titan Framework GitHub Repository](https://github.com/gambitph/Titan-Framework)
 * [Issue Tracker](https://github.com/gambitph/Titan-Framework/issues)
 
-= Try it Out First =
+= Start Creating Your Theme =
 
-Want to see what Titan Framework can do? [Check out our live demo, no need to install anything!](http://demo.titanframework.net/wp-admin/)
+[You can generate your own Underscores based theme with Titan Framework through our site](http://www.titanframework.net/)
+
+The generated theme comes with sample pre-created options in the admin and theme customizer along with code documentation.
 
 = Features =
 
@@ -45,7 +49,6 @@ Want to see what Titan Framework can do? [Check out our live demo, no need to in
 * Admin options and tabs
 * Meta boxes and options
 * Theme customizer sections and options
-* Shortcodes with TinyMCE and Visual Composer auto-integration ([Shortcode Extension](http://codecanyon.net/item/titan-framework-shortcode-extension/7009811?ref=bfintal))
 
 = Options available in admin pages, meta boxes and theme customizer: =
 
@@ -113,7 +116,7 @@ and to everyone else in the GitHub repo!
 
 1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Use the provided classes and functions in your theme or plugin. Read our guide on how to [Get Started with Titan Framework](http://www.titanframework.net/get-started/)
+3. Use the provided classes and functions in your theme or plugin. Read our guide on how to [Get Started with Titan Framework](http://www.titanframework.net/how/)
 
 == Frequently Asked Questions ==
 
@@ -121,89 +124,6 @@ and to everyone else in the GitHub repo!
 * [Documentation and Tutorials for Developers](http://titanframework.net)
 * [Titan Framework GitHub Repository](https://github.com/gambitph/Titan-Framework)
 * [Issue Tracker](https://github.com/gambitph/Titan-Framework/issues)
-
-== Sample Code ==
-
-= Creating an admin menu and submenu =
-
-`$titan = TitanFramework::getInstance( 'my-plugin' );
-
-// Create menu
-$panel = $titan->createAdminPanel( array(
-	'name' => 'Menu Name',
-) );
-
-$panel2 = $panel->createAdminPanel( array(
-	'name' => 'Submenu Name',
-) );`
-
-= Creating an option in an admin page =
-
-`$titan = TitanFramework::getInstance( 'my-plugin' );
-
-// Create menu
-$panel = $titan->createAdminPanel( array(
-	'name' => 'Menu Name',
-) );
-
-// Create a select option
-$panel->createOption( array(
-	'name' => 'Select One',
-	'id' => 'my_selected_id
-	'type' => 'select',
-	'options' => array(
-		'1' => 'Option one',
-		'2' => 'Option two',
-		'3' => 'Option three',
-	),
-	'default' => '3',
-	'desc' => 'Some description',
-) );`
-
-= Create a meta box with an option =
-
-`$titan = TitanFramework::getInstance( 'my-plugin' );
-
-// Create menu
-$box = $titan->createMetaBox( array(
-	'name' => 'Menu Name',
-) );
-
-$box->createOption( array(
-	'name' => 'My Text',
-	'type' => 'text',
-	'id' => 'my_text_id',
-	'desc' => 'Some description',
-) );`
-
-= Create a theme customizer with an option with live preview =
-
-`$titan = TitanFramework::getInstance( 'my-plugin' );
-
-$section = $titan->createThemeCustomizerSection( array(
-	'name' => 'My Section',
-	'desc' => 'Section description',
-) );
-
-$section->createOption( array(
-	'id' => 'my_color',
-	'name' => 'My Color',
-	'type' => 'color',
-	'default' => '#555555',
-	'livepreview' => "$('#main').css('backgroundColor', value);",
-) );`
-
-= Getting values =
-
-`$titan = TitanFramework::getInstance( 'my-plugin' );
-
-// Get an option or an admin option
-$myValue = $titan->getOption( 'option_name' );
-
-// Get a theme customizer option
-$myValue = $titan->getOption( 'option_name', $post_id );`
-
-**For developers: for documentation and examples, please visit our website at [titanframework.net](http://titanframework.net)**
 
 == Upgrade Notice ==
 
@@ -215,6 +135,22 @@ $myValue = $titan->getOption( 'option_name', $post_id );`
 4. Sample code on how to create admin pages and options
 
 == Changelog ==
+
+= 1.7.5 =
+* Added `hidden` parameter for all options
+* Fixed 4.1 display issues with the upload option
+* Fixed an undefined notice that sometimes appears
+
+= 1.7.4 =
+* Faster SCSS parsing
+* Faster loading time
+* Unit parameter for number options now supported in the Theme Customizer
+* Better font color option handling in Theme Customizer
+* Now prevents SCSS errors from showing up
+* Fixed name label issues with the enable option
+* Better plugin checking method
+* Plugin checker now integrates with TGM Plugin Activation
+* Updated Ace
 
 = 1.7.3 =
 * Fixed bug introduced in 1.7.2 where admin options sometimes were not being saved
