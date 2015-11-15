@@ -3,7 +3,7 @@
  * Plugin Name: Adblock Notify by b*web
  * Plugin URI: http://b-website.com/adblock-notify-plugin-for-wordpress
  * Description: An Adblock detection and nofitication plugin with get around options and a lot of settings. Dashboard widget with adblock counter included!
- * Version: 1.7.2
+ * Version: 1.8
  * Author: Brice CAPOBIANCO
  * Author URI: b-website.com
  * Text Domain: an-translate
@@ -37,23 +37,23 @@ if ( !defined( 'ABSPATH' ) ) {
 /***************************************************************
  * Define constants
  ***************************************************************/
-if (!defined('AN_PATH')) {
-    define('AN_PATH', plugin_dir_path(__FILE__));
+if (!defined( 'AN_PATH' )) {
+    define( 'AN_PATH', plugin_dir_path(__FILE__));
 }
-if (!defined('AN_URL')) {
-    define('AN_URL', plugin_dir_url(__FILE__));
+if (!defined( 'AN_URL' )) {
+    define( 'AN_URL', plugin_dir_url(__FILE__));
 }
-if (!defined('AN_BASE')) {
-    define('AN_BASE', plugin_basename(__FILE__));
+if (!defined( 'AN_BASE' )) {
+    define( 'AN_BASE', plugin_basename(__FILE__));
 }
-if (!defined('AN_NAME')) {
-    define('AN_NAME', 'Adblock Notify');
+if (!defined( 'AN_NAME' )) {
+    define( 'AN_NAME', 'Adblock Notify' );
 }
-if (!defined('AN_ID')) {
-    define('AN_ID', 'adblock-notify');
+if (!defined( 'AN_ID' )) {
+    define( 'AN_ID', 'adblock-notify' );
 }
-if (!defined('AN_COOKIE')) {
-    define('AN_COOKIE', 'anCookie');
+if (!defined( 'AN_COOKIE' )) {
+    define( 'AN_COOKIE', 'anCookie' );
 }
 
 
@@ -73,7 +73,7 @@ add_action( 'plugins_loaded', 'an_translate_load_textdomain', 1 );
  ***************************************************************/
 require_once( AN_PATH . 'lib/titan-framework/titan-framework-embedder.php' );
 
-$anFiles = array('options', 'functions', 'widget', 'files' );
+$anFiles = array( 'options', 'functions', 'widget', 'files' );
 foreach ($anFiles as $anFile) {
     require_once( AN_PATH . 'adblock-notify-' . $anFile . '.php' );
 }
@@ -86,28 +86,28 @@ function an_enqueue_an_sripts() {
     if (!is_admin()) {
 		$anVersion =  '1.6.1';
         $anScripts = unserialize( get_option( 'adblocker_notify_selectors' ) );
-        $an_option = TitanFramework::getInstance('adblocker_notify');
+        $an_option = TitanFramework::getInstance( 'adblocker_notify' );
 
         //Disabled due to too many bug repports
-		//wp_enqueue_script('an_fuckadblock', AN_URL . 'js/an-detect.min.js', array( 'jquery' ), NULL, true );
+		//wp_enqueue_script( 'an_fuckadblock', AN_URL . 'js/an-detect.min.js', array( 'jquery' ), NULL, true );
 
-        if ( $an_option->getOption('an_option_selectors') == false ) {
+        if ( $an_option->getOption( 'an_option_selectors' ) == false ) {
 
             wp_register_script( 'an_scripts', AN_URL . 'js/an-scripts.min.js', array( 'jquery' ),  $anVersion, true );
             wp_register_style( 'an_style', AN_URL . 'css/an-style.min.css', array(),  $anVersion, NULL );
        
-        } else if ($anScripts['temp-path'] != false) {
+        } else if ($anScripts[ 'temp-path' ] != false) {
 
 			//check if server is SSL
 			if ( is_ssl() )
-			$anScripts['temp-url'] = preg_replace( '/^http:/i', 'https:', $anScripts['temp-url'] );
+			$anScripts[ 'temp-url' ] = preg_replace( '/^http:/i', 'https:', $anScripts[ 'temp-url' ] );
 			
-            wp_register_script( 'an_scripts', $anScripts['temp-url'] . $anScripts['files']['js'], array('jquery'), $anVersion, true );
-            wp_register_style( 'an_style', $anScripts['temp-url'] . $anScripts['files']['css'], array(),  $anVersion, NULL );
+            wp_register_script( 'an_scripts', $anScripts[ 'temp-url' ] . $anScripts[ 'files' ][ 'js' ], array( 'jquery' ), $anVersion, true );
+            wp_register_style( 'an_style', $anScripts[ 'temp-url' ] . $anScripts[ 'files' ]['css' ], array(),  $anVersion, NULL );
        
         }
 
-        if ( $anScripts['temp-path'] == false && $an_option->getOption('an_option_selectors') == true ) {
+        if ( $anScripts['temp-path' ] == false && $an_option->getOption( 'an_option_selectors' ) == true ) {
 
 			//Print Style and script in the footer with an_prepare (functions.php)
             //CSS file does not exist anymore
@@ -156,7 +156,7 @@ add_action( 'admin_enqueue_scripts', 'an_enqueue_admin_scripts' );
  * Add settings link on plugin list page
  ***************************************************************/
 function an_settings_link( $links ) {
-    $links[] = '<a href="options-general.php?page=' . AN_ID . '">' . __('Settings', 'an-translate') . '</a>';
+    $links[] = '<a href="options-general.php?page=' . AN_ID . '">' . __( 'Settings', 'an-translate' ) . '</a>';
     return $links;
 }
 
@@ -168,7 +168,7 @@ add_filter( 'plugin_action_links_' . AN_BASE, 'an_settings_link' );
  ***************************************************************/
 function an_meta_links( $links, $file ) {
 	if ( $file === 'adblock-notify-by-bweb/adblock-notify.php' ) {
-		$links[] = '<a href="http://b-website.com/category/plugins" target="_blank" title="' . __('More b*web Plugins', 'an-translate') . '">' . __('More b*web Plugins', 'an-translate') . '</a>';
+		$links[] = '<a href="http://b-website.com/category/plugins" target="_blank" title="' . __( 'More b*web Plugins', 'an-translate' ) . '">' . __( 'More b*web Plugins', 'an-translate' ) . '</a>';
 		$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8" target="_blank" title="' . __( 'Donate to this plugin &#187;' ) . '"><strong>' . __( 'Donate to this plugin &#187;' ) . '</strong></a>';
 	}
 	return $links;
@@ -233,11 +233,11 @@ function an_delete_temp_folder( $dirPath ) {
 function adblocker_notify_uninstall() {
     // Remove temp files
     $anTempDir = unserialize( get_option( 'adblocker_notify_selectors' ) );
-    an_delete_temp_folder( $anTempDir['temp-path'] );
+    an_delete_temp_folder( $anTempDir['temp-path' ] );
    
     //Remove TitanFramework Generated Style
     $uploadDir = wp_upload_dir();
-    $TfCssFile = trailingslashit( $uploadDir['basedir']  ) . 'titan-framework-adblocker_notify-css.css';
+    $TfCssFile = trailingslashit( $uploadDir['basedir' ]  ) . 'titan-framework-adblocker_notify-css.css';
 	
 	if( file_exists( $TfCssFile ) )
     	unlink( $TfCssFile );

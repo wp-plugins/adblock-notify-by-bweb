@@ -23,6 +23,18 @@ jQuery(document).ready(function ($) {
                 }
             }
 
+            //launch SECOND test (jQuery) - based on defined adverts selectors
+            if ( $an_state == null && anOptions.anOptionAdsSelectors != '') {
+				var substr = anOptions.anOptionAdsSelectors.split(',');
+				$.each(substr , function(i, val) { 
+					if ( ($(substr[i]).length > 0 && $(substr[i]).outerHeight() == 0 ) ) {
+							$an_state = true;
+							return false
+						}
+                });
+			}
+
+
             //launch SECOND test with fuckadblock script (js file)
         	//Disabled due to too many bug repports
             /*function adBlockDetected() {
@@ -62,7 +74,13 @@ jQuery(document).ready(function ($) {
                     var headingColor = '';
                 }
 
-                $('#an-Modal').prepend('<h1 ' + headingColor + '>' + anOptions.anModalTitle + '</h1>' + anOptions.anModalText + '<a class="close-reveal-modal">&#215;</a>');
+				//Closing cross
+                var closingCross = '';
+                if (anOptions.anOptionModalCross == 2) {
+                    var closingCross = '<a class="close-reveal-modal">&#215;</a>';
+                }
+
+                $('#an-Modal').prepend('<h1 ' + headingColor + '>' + anOptions.anModalTitle + '</h1>' + anOptions.anModalText + closingCross );
 
                 $('#an-Modal').bind('reveal:open', function () {                    	//on modale box open
                     $('.reveal-modal-bg').css({                                     	//apply custom style
@@ -321,7 +339,7 @@ jQuery(document).ready(function ($) {
      Listener for data-reveal-id attributes
      ----------------------------*/
 
-    $('a[data-reveal-id]').live('click', function (e) {
+    $(document).on('click', 'a[data-reveal-id]', function (e) {
         e.preventDefault();
         var modalLocation = $(this).attr('data-reveal-id');
         $('#' + modalLocation).reveal($(this).data());

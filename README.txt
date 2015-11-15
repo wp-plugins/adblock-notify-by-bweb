@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags:  adblock, page redirect, cookies, notify, modal box, dashboard widget, ads, notification, adBlocker, Responsive, plugin, popup, modal, jquery, ajax, free, advetissement, shortcode, images, image, CSS, lightbox
 Requires at least: 3.7
 Tested up to: 4.3
-Stable tag: 1.7.2
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,10 +12,15 @@ Detect Adblock and nofity users. Simple plugin with get around options and a lot
 
 == Description ==
 
-<blockquote>Adblock Notify has been blacklisted by adblocker softwares but it is still working properly with the "Random selectors and files" option. Make sure to disable your adblocker to view screenshots in WordPress.org and in your admin area to view all the plugin's options fields and the dashboard widget.</blockquote>
+<blockquote>
+Adblock Notify has been blacklisted by adblocker softwares but it is still working properly with the "Random selectors and files" option. Make sure to disable your adblocker to view screenshots in WordPress.org and in your admin area to view all the plugin's options fields and the dashboard widget.
+</blockquote>
 
 Detect Adblock and nofity users. Help to block adblock (eg: Adblock Plus) and increase your ad revenue.
 Adblock Notify is a very easy to use plugin with get around options and a lot of settings. A smart dashboard widget with counter & statistics is included!
+
+**Can I stop adblocker users?**
+NO! This plugin does not completly block adblocker users, it only uses a passive approach, and it will always be that way.
 
 = Plugin Capabilities =
 
@@ -84,16 +89,21 @@ Become a translator and send me your translation! [Contact-me](http://b-website.
 
 == Frequently Asked Questions ==
 
+= Can I stop adblocker users? =
+NO! This plugin does not completly block adblocker users, it only uses a passive approach, and it will always be that way.
+
 = Is it working with Google Adsense Ads? =
 Yes, and probably with all kinf of content hidden by an adblocker software.
 
 = Is it compatible with caching systeme =
-Yes it is.
+Yes it is. Depend on parameters...
 
 = The plugin is activated and setting up, but nothing append. =
-Purge all cache and rebuild your minify, then check again.
+First check if the "Random selectors and files" option is checked.
+Then purge all cache and rebuild your minify, then check again.
 You can also try to open a new private tab to have a new "clean" test environment.
 If you don't have any caching/minify plugin, it is mostly due to your theme which does not contain the required wp_footer() function in the footer.php file.
+
 
 == Screenshots ==
 1. Modal box notification
@@ -101,6 +111,20 @@ If you don't have any caching/minify plugin, it is mostly due to your theme whic
 3. Statistics on the WordPress Dashboard
 
 == Changelog ==
+
+= 1.8 =
+* Titan Framework update (1.9.2)
+* Set "Use random selectors and files" checked by default
+* Add the ability to specify the advert selector to improve detection.
+* Now support/detect Firefox 42 with the privacy protection enable
+* Now support/detect Ghostery
+* New option to hide the x close button of the modal box
+* French translation updated
+
+= 1.7.3 =
+* Titan Framework update (1.8.1)
+* Fix a PHP error on mobile device
+
 = 1.7.2 =
 * Tested on WP 4.3 with success!
 

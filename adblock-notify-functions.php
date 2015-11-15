@@ -11,40 +11,42 @@ if ( !defined( 'ABSPATH' ) ) {
  * Insert elements in the DOM : HTML & SCRIPT
  ***************************************************************/
 function an_prepare() {
-    $an_option = TitanFramework::getInstance('adblocker_notify');
+    $an_option = TitanFramework::getInstance( 'adblocker_notify' );
 	$output = '';
 	
     //Retrieve options
     //General Options
-    $anOptionChoice = $an_option->getOption('an_option_choice');
-    $anOptionStats = $an_option->getOption('an_option_stats');
-    $anOptionSelectors = $an_option->getOption('an_option_selectors');
-    $anOptionCookie = $an_option->getOption('an_option_cookie');
-    $anOptionCookieLife = $an_option->getOption('an_option_cookie_life');
-    $anModalTitle = $an_option->getOption('an_modal_title');
-    $anModalText = $an_option->getOption('an_modal_text');
-    $anPageRedirect = $an_option->getOption('an_page_redirect');
-    $anPageNojsActivation = $an_option->getOption('an_page_nojs_activation');
-    $anPageNojsRedirect = $an_option->getOption('an_page_nojs_redirect');
+    $anOptionChoice = $an_option->getOption( 'an_option_choice' );
+    $anOptionStats = $an_option->getOption( 'an_option_stats' );
+    $anOptionSelectors = $an_option->getOption( 'an_option_selectors' );
+    $anOptionAdsSelectors = $an_option->getOption( 'an_option_ads_selectors' );
+    $anOptionCookie = $an_option->getOption( 'an_option_cookie' );
+    $anOptionCookieLife = $an_option->getOption( 'an_option_cookie_life' );
+    $anModalTitle = $an_option->getOption( 'an_modal_title' );
+    $anModalText = $an_option->getOption( 'an_modal_text' );
+    $anPageRedirect = $an_option->getOption( 'an_page_redirect' );
+    $anPageNojsActivation = $an_option->getOption( 'an_page_nojs_activation' );
+    $anPageNojsRedirect = $an_option->getOption( 'an_page_nojs_redirect' );
 
     //Modal Options
-    $anOptionModalEffect = $an_option->getOption('an_option_modal_effect');
-    $anOptionModalSpeed = $an_option->getOption('an_option_modal_speed');
-    $anOptionModalClose = $an_option->getOption('an_option_modal_close');
-    $anOptionModalBgcolor = $an_option->getOption('an_option_modal_bgcolor');
-    $anOptionModalBgopacity = $an_option->getOption('an_option_modal_bgopacity');
-    $anOptionModalBxcolor = $an_option->getOption('an_option_modal_bxcolor');
-    $anOptionModalBxtitle = $an_option->getOption('an_option_modal_bxtitle');
-    $anOptionModalBxtext = $an_option->getOption('an_option_modal_bxtext');
-    $anOptionModalCustomCSS = $an_option->getOption('an_option_modal_custom_css');
+    $anOptionModalEffect = $an_option->getOption( 'an_option_modal_effect' );
+    $anOptionModalSpeed = $an_option->getOption( 'an_option_modal_speed' );
+    $anOptionModalCross = $an_option->getOption( 'an_option_modal_cross' );
+    $anOptionModalClose = $an_option->getOption( 'an_option_modal_close' );
+    $anOptionModalBgcolor = $an_option->getOption( 'an_option_modal_bgcolor' );
+    $anOptionModalBgopacity = $an_option->getOption( 'an_option_modal_bgopacity' );
+    $anOptionModalBxcolor = $an_option->getOption( 'an_option_modal_bxcolor' );
+    $anOptionModalBxtitle = $an_option->getOption( 'an_option_modal_bxtitle' );
+    $anOptionModalBxtext = $an_option->getOption( 'an_option_modal_bxtext' );
+    $anOptionModalCustomCSS = $an_option->getOption( 'an_option_modal_custom_css' );
 
     //Modal Options
-    $anAlternativeActivation = $an_option->getOption('an_alternative_activation');
-    $anAlternativeElement = $an_option->getOption('an_alternative_elements');
-    $anAlternativeText = $an_option->getOption('an_alternative_text');
-    $anAlternativeClone = $an_option->getOption('an_alternative_clone');
-    $anAlternativeProperties = $an_option->getOption('an_alternative_properties');
-    $anAlternativeCss = $an_option->getOption('an_alternative_custom_css');
+    $anAlternativeActivation = $an_option->getOption( 'an_alternative_activation' );
+    $anAlternativeElement = $an_option->getOption( 'an_alternative_elements' );
+    $anAlternativeText = $an_option->getOption( 'an_alternative_text' );
+    $anAlternativeClone = $an_option->getOption( 'an_alternative_clone' );
+    $anAlternativeProperties = $an_option->getOption( 'an_alternative_properties' );
+    $anAlternativeCss = $an_option->getOption( 'an_alternative_custom_css' );
 
     //redirect URL with JS
     $anPermalink = an_url_redirect($anPageRedirect);
@@ -59,13 +61,13 @@ function an_prepare() {
     $anOptionModalOverlay = an_hex2rgba($anOptionModalBgcolor, $anOptionModalBgopacity / 100);
 
     //Load random selectors
-    $anScripts = unserialize(get_option('adblocker_notify_selectors'));
+    $anScripts = unserialize(get_option( 'adblocker_notify_selectors' ));
 
     //DOM and Json
     if ( $anOptionSelectors == false ) {
         $output .= '<div id="an-Modal" class="reveal-modal" ';
     } else {
-        $output .= '<div id="' . $anScripts['selectors'][0] . '" class="' . $anScripts['selectors'][1] . '" ';
+        $output .= '<div id="' . $anScripts[ 'selectors' ][0] . '" class="' . $anScripts[ 'selectors' ][1] . '" ';
     }
     
     $output .= 'style="background:' . $anOptionModalBxcolor . ';';
@@ -77,24 +79,26 @@ function an_prepare() {
     $output .= '/* <![CDATA[ */';
     $output .= 'var anOptions =' .
             json_encode(array(
-                'anOptionChoice' => $anOptionChoice,
-                'anOptionStats' => $anOptionStats,
-                'anOptionCookie' => $anOptionCookie,
-                'anOptionCookieLife' => $anOptionCookieLife,
-                'anModalTitle' => $anModalTitle,
-                'anModalText' => do_shortcode( $anModalText ),
-                'anPageRedirect' => $anPageRedirect,
-                'anPermalink' => $anPermalink,
-                'anOptionModalEffect' => $anOptionModalEffect,
-                'anOptionModalspeed' => $anOptionModalSpeed,
-                'anOptionModalclose' => $anOptionModalClose,
-                'anOptionModalOverlay' => $anOptionModalOverlay,
-                'anOptionModalBxtitle' => $anOptionModalBxtitle,
-                'anAlternativeActivation' => $anAlternativeActivation,
-                'anAlternativeElement' => $anAlternativeElement,
-                'anAlternativeText' => do_shortcode( $anAlternativeText ),
-                'anAlternativeClone' => $anAlternativeClone,
-                'anAlternativeProperties' => $anAlternativeProperties,
+                'anOptionChoice' 			=> $anOptionChoice,
+                'anOptionStats' 			=> $anOptionStats,
+				'anOptionAdsSelectors' 		=> preg_replace('/\s+/', '', $anOptionAdsSelectors),
+                'anOptionCookie' 			=> $anOptionCookie,
+                'anOptionCookieLife' 		=> $anOptionCookieLife,
+                'anModalTitle' 				=> $anModalTitle,
+                'anModalText' 				=> do_shortcode( $anModalText ),
+                'anPageRedirect' 			=> $anPageRedirect,
+                'anPermalink' 				=> $anPermalink,
+                'anOptionModalEffect' 		=> $anOptionModalEffect,
+                'anOptionModalspeed' 		=> $anOptionModalSpeed,
+                'anOptionModalCross' 		=> $anOptionModalCross,
+                'anOptionModalclose' 		=> $anOptionModalClose,
+                'anOptionModalOverlay' 		=> $anOptionModalOverlay,
+                'anOptionModalBxtitle' 		=> $anOptionModalBxtitle,
+                'anAlternativeActivation' 	=> $anAlternativeActivation,
+                'anAlternativeElement' 		=> $anAlternativeElement,
+                'anAlternativeText' 		=> do_shortcode( $anAlternativeText ),
+                'anAlternativeClone' 		=> $anAlternativeClone,
+                'anAlternativeProperties' 	=> $anAlternativeProperties,
     ));
     $output .= '/* ]]> */';
     $output .= '</script>';
@@ -112,14 +116,14 @@ function an_prepare() {
 
     $output .= '<div id="adsense" class="an-sponsored" style="position:absolute; z-index:-1; height:1px; width:1px; visibility: hidden; top: -1px; left: 0;"><img class="an-advert-banner" alt="sponsored" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>';
 
-    $output = apply_filters('an_prepare', $output);
+    $output = apply_filters( 'an_prepare', $output);
 
-    if ( $anScripts['temp-path'] == false && $an_option->getOption('an_option_selectors') == true )  
+    if ( $anScripts[ 'temp-path' ] == false && $an_option->getOption( 'an_option_selectors' ) == true )  
         $output .= an_print_change_files_css_selectors($an_option, $anScripts);
     
     echo $output;
 }
-add_action('wp_footer', 'an_prepare');
+add_action( 'wp_footer', 'an_prepare' );
 
 
 /***************************************************************
@@ -127,11 +131,11 @@ add_action('wp_footer', 'an_prepare');
  * prevent Header already sent notice
  ***************************************************************/
 function an_cookies_init() {
-	$an_option = unserialize(get_option('adblocker_notify_options'));
-    $anOptionCookie = $an_option['an_option_cookie'];
-    $anPageNojsActivation = $an_option['an_page_nojs_activation'];
-    $anPageNojsRedirect = $an_option['an_page_nojs_redirect'];
-    $anOptionCookieLife = $an_option['an_option_cookie_life'];
+	$an_option = unserialize(get_option( 'adblocker_notify_options' ));
+    $anOptionCookie = $an_option[ 'an_option_cookie' ];
+    $anPageNojsActivation = $an_option[ 'an_page_nojs_activation' ];
+    $anPageNojsRedirect = $an_option[ 'an_page_nojs_redirect' ];
+    $anOptionCookieLife = $an_option[ 'an_option_cookie_life' ];
     
     if (!empty($anPageNojsActivation) && !$_COOKIE[AN_COOKIE]) {
         //redirect URL with NO JS
@@ -146,7 +150,7 @@ function an_cookies_init() {
     //remove cookie if deactivate
     an_remove_cookie($anOptionCookie);
 }
-add_action('init', 'an_cookies_init');
+add_action( 'init', 'an_cookies_init' );
 
 
 /***************************************************************
@@ -176,7 +180,7 @@ function an_url_redirect($pageId) {
 function an_remove_cookie($anOptionCookie) {
     if (( isset($_COOKIE[AN_COOKIE]) && $anOptionCookie == 2 ) || ( isset($_COOKIE[AN_COOKIE]) && $anOptionCookie == '2' )) {
         unset($_COOKIE[AN_COOKIE]);
-        setcookie(AN_COOKIE, null, -1, '/');
+        setcookie(AN_COOKIE, null, -1, '/' );
     }
 }
 
@@ -187,7 +191,7 @@ function an_remove_cookie($anOptionCookie) {
 function an_nojs_cookie($expiration) {
     $expiration = time() + ($expiration * 24 * 60 * 60);
     if (!isset($_COOKIE[AN_COOKIE])) {
-        setcookie(AN_COOKIE, true, $expiration, '/');
+        setcookie(AN_COOKIE, true, $expiration, '/' );
     }
 }
 
@@ -247,7 +251,7 @@ function an_hex2rgba($color, $opacity = false) {
         return $default;
 
     //Sanitize $color if "#" is provided 
-    if ($color[0] == '#') {
+    if ($color[0] == '#' ) {
         $color = substr($color, 1);
     }
 
@@ -261,15 +265,15 @@ function an_hex2rgba($color, $opacity = false) {
     }
 
     //Convert hexadec to rgb
-    $rgb = array_map('hexdec', $hex);
+    $rgb = array_map( 'hexdec', $hex);
 
     //Check if opacity is set(rgba or rgb)
     if ($opacity) {
         if (abs($opacity) > 1)
             $opacity = 1.0;
-        $output = 'rgba(' . implode(",", $rgb) . ',' . $opacity . ')';
+        $output = 'rgba( ' . implode(",", $rgb) . ',' . $opacity . ' )';
     } else {
-        $output = 'rgb(' . implode(",", $rgb) . ')';
+        $output = 'rgb( ' . implode(",", $rgb) . ' )';
     }
 
     //Return rgb(a) color string
@@ -294,4 +298,4 @@ function an_reset_stats() {
 		add_action( 'admin_notices', 'an_stats_notice' );
 	}
 }
-add_filter('admin_head', 'an_reset_stats' );
+add_filter( 'admin_head', 'an_reset_stats' );

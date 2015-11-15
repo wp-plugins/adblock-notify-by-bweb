@@ -25,7 +25,7 @@ function an_random_slug() {
 /***************************************************************
  * Create new Style and Script files in a temp directory
  ***************************************************************/
-function an_change_files_css_selectors($flush, $tempFolderPath, $tempFolderURL, $file, $oldFileName, $newFileName, $oldSelectors, $newSelectors, $content = '') {
+function an_change_files_css_selectors( $flush, $tempFolderPath, $tempFolderURL, $file, $oldFileName, $newFileName, $oldSelectors, $newSelectors, $content = '' ) {
 
     //Get default css and js files
     $fileExt = pathinfo($file, PATHINFO_EXTENSION);
@@ -36,11 +36,11 @@ function an_change_files_css_selectors($flush, $tempFolderPath, $tempFolderURL, 
     //Flush semectors
     if ( $flush == true ) {
         //Replace default selectors with new ones
-        $defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
+        $defaultSelectors = array( 'an-Modal', 'reveal-modal', 'an-alternative' );
         $fileContent = str_replace($defaultSelectors, $newSelectors, $fileContent);
     } else {
         //Replace default selectors with existings ones
-        $defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
+        $defaultSelectors = array( 'an-Modal', 'reveal-modal', 'an-alternative' );
         $fileContent = str_replace($defaultSelectors, $oldSelectors, $fileContent);
       
     }
@@ -58,14 +58,14 @@ function an_change_files_css_selectors($flush, $tempFolderPath, $tempFolderURL, 
     }
     //Verify directory
     $uploadDir = wp_upload_dir();
-    if (!$wp_filesystem->is_dir($uploadDir['basedir']) ||
-        !$wp_filesystem->is_writable($uploadDir['basedir'])) {
+    if (!$wp_filesystem->is_dir($uploadDir[ 'basedir' ]) ||
+        !$wp_filesystem->is_writable($uploadDir[ 'basedir' ])) {
         return false;
     }
 
     //Create new dir and files
     if ($wp_filesystem->is_dir($tempFolderPath)) {
-        array_map('unlink', glob($tempFolderPath . '*.' . $fileExt));
+        array_map( 'unlink', glob($tempFolderPath . '*.' . $fileExt));
     } else {
         $wp_filesystem->mkdir($tempFolderPath);
     }
@@ -88,28 +88,28 @@ function an_change_files_css_selectors($flush, $tempFolderPath, $tempFolderURL, 
 function an_save_setting_random_selectors() {
 
 	//Restart cookie on every options save.
-	setcookie(AN_COOKIE, null, -1, '/');
+	setcookie(AN_COOKIE, null, -1, '/' );
     
-    $an_option = unserialize(get_option('adblocker_notify_options'));
+    $an_option = unserialize(get_option( 'adblocker_notify_options' ));
   
     //Define new temp path
     $uploadDir = wp_upload_dir();
-    $tempFolderPath = trailingslashit( $uploadDir['basedir'] ) . 'an-temp/';
-    $tempFolderURL = trailingslashit( $uploadDir['baseurl'] ) . 'an-temp/';
+    $tempFolderPath = trailingslashit( $uploadDir[ 'basedir' ] ) . 'an-temp/';
+    $tempFolderURL = trailingslashit( $uploadDir[ 'baseurl' ] ) . 'an-temp/';
 
-    if( $an_option['an_option_selectors'] == true ) {
+    if( $an_option[ 'an_option_selectors' ] == true ) {
         
         //Retrieve old files infos
-        $anScripts = unserialize(get_option('adblocker_notify_selectors'));
-        if( !isset( $anScripts['files']['css'] ) ) $anScripts['files']['css'] = '';
-        if( !isset( $anScripts['files']['js'] ) ) $anScripts['files']['js'] = '';
-        if( !isset( $anScripts['selectors'] ) ) $anScripts['selectors'] = '';
+        $anScripts = unserialize(get_option( 'adblocker_notify_selectors' ));
+        if( !isset( $anScripts[ 'files' ][ 'css' ] ) ) $anScripts[ 'files' ][ 'css' ] = '';
+        if( !isset( $anScripts[ 'files' ][ 'js' ] ) ) $anScripts[ 'files' ][ 'js' ] = '';
+        if( !isset( $anScripts[ 'selectors' ] ) ) $anScripts[ 'selectors' ] = '';
 
         //Define new selectors
         $newSelectors = array(an_random_slug(), an_random_slug(), an_random_slug());
     
         $flush = false;
-        if( $an_option['an_option_flush'] == true || !file_exists($tempFolderPath) ||  $anScripts['temp-path'] == false ) $flush = true;
+        if( $an_option[ 'an_option_flush' ] == true || !file_exists($tempFolderPath) ||  $anScripts[ 'temp-path' ] == false ) $flush = true;
 
         //Generate new css and js files
         $titanCssContent = an_update_titan_css_selectors($an_option);
@@ -118,9 +118,9 @@ function an_save_setting_random_selectors() {
                     $tempFolderPath, 
                     $tempFolderURL,
                     AN_URL . 'css/an-style.min.css',
-                    $anScripts['files']['css'],
+                    $anScripts[ 'files' ][ 'css' ],
                     an_random_slug(),
-                    $anScripts['selectors'],
+                    $anScripts[ 'selectors' ],
                     $newSelectors,
                     $titanCssContent
                 );
@@ -129,9 +129,9 @@ function an_save_setting_random_selectors() {
                     $tempFolderPath, 
                     $tempFolderURL,
                     AN_URL . 'js/an-scripts.min.js',
-                    $anScripts['files']['js'],
+                    $anScripts[ 'files' ][ 'js' ],
                     an_random_slug(),
-                    $anScripts['selectors'],
+                    $anScripts[ 'selectors' ],
                     $newSelectors
                 );
 
@@ -142,7 +142,7 @@ function an_save_setting_random_selectors() {
         
         //Keep old selectors if no flushed
         if ( $flush == false ) {
-            $newSelectors = $anScripts['selectors'];
+            $newSelectors = $anScripts[ 'selectors' ];
         }
     
         //Store data
@@ -156,11 +156,11 @@ function an_save_setting_random_selectors() {
             'selectors' => $newSelectors
         );
 
-        update_option('adblocker_notify_selectors', serialize($newFiles));      
+        update_option( 'adblocker_notify_selectors', serialize($newFiles));      
 
         //remove option flush
-        $an_option['an_option_flush'] = false;
-        update_option('adblocker_notify_options', serialize($an_option));   
+        $an_option[ 'an_option_flush' ] = false;
+        update_option( 'adblocker_notify_options', serialize($an_option));   
         
     } else {
 
@@ -169,7 +169,7 @@ function an_save_setting_random_selectors() {
    
     }
 }
-add_action('tf_admin_options_saved_adblocker_notify', 'an_save_setting_random_selectors', 99);
+add_action( 'tf_admin_options_saved_adblocker_notify', 'an_save_setting_random_selectors', 99);
 
 
 /***************************************************************
@@ -180,23 +180,23 @@ function an_error_admin_notices() {
     if ($screen->id != 'toplevel_page_' . AN_ID)
         return;
 
-    $anScripts = unserialize(get_option('adblocker_notify_selectors'));
+    $anScripts = unserialize(get_option( 'adblocker_notify_selectors' ));
 
-    if (!empty($anScripts) && $anScripts['temp-path'] == false) {
+    if (!empty($anScripts) && $anScripts[ 'temp-path' ] == false) {
         echo '
                 <div class="error warning">
                     <p>
-                        ' . __('WARNING: There was an error creating Adblock Notify CSS and JS files. Upload directory is not writable. Please CHMOD "wp-content/uploads" to 0664 and verify your server settings', 'an-translate') . ' &nbsp;&nbsp;&nbsp;&nbsp;
+                        ' . __( 'WARNING: There was an error creating Adblock Notify CSS and JS files. Upload directory is not writable. Please CHMOD "wp-content/uploads" to 0664 and verify your server settings', 'an-translate' ) . ' &nbsp;&nbsp;&nbsp;&nbsp;
                         [ <a href="http://codex.wordpress.org/Changing_File_Permissions" target="_blank" title="Changing File Permissions"> Changing File Permissions</a> ]
                     </p>
                     <p>
-                        ' . __('Don\'t worry, we thought about it. Adblock Notify will print the scripts directly in your DOM, but for performance purpose it is recommended to change your uploads directory CHMOD.', 'an-translate') . '
+                        ' . __( 'Don\'t worry, we thought about it. Adblock Notify will print the scripts directly in your DOM, but for performance purpose it is recommended to change your uploads directory CHMOD.', 'an-translate' ) . '
                     </p>
                 </div>
         ';
     }
 }
-add_action('admin_notices', 'an_error_admin_notices');
+add_action( 'admin_notices', 'an_error_admin_notices' );
 
 
 /***************************************************************
@@ -205,12 +205,12 @@ add_action('admin_notices', 'an_error_admin_notices');
 function an_update_titan_css_selectors($an_option) {
 
     $tfStyle = '';
-    $tfStyle .= $an_option['an_alternative_custom_css'];
-    $tfStyle .= $an_option['an_option_modal_custom_css'];
+    $tfStyle .= $an_option[ 'an_alternative_custom_css' ];
+    $tfStyle .= $an_option[ 'an_option_modal_custom_css' ];
 
     //Remove TitanFramework Generated Style
     $uploadDir = wp_upload_dir();
-    $TfCssFile = trailingslashit( $uploadDir['basedir']  ) . 'titan-framework-adblocker_notify-css.css';
+    $TfCssFile = trailingslashit( $uploadDir[ 'basedir' ]  ) . 'titan-framework-adblocker_notify-css.css';
 	
 	if( file_exists( $TfCssFile ) )
     	unlink( $TfCssFile );
@@ -228,12 +228,12 @@ function an_print_change_files_css_selectors($an_option, $anScripts) {
     $anCSS = AN_URL . 'css/an-style.min.css';
     $anJS = AN_URL . 'js/an-scripts.min.js';
 
-    $newSelectors = $anScripts['selectors'];
-    $defaultSelectors = array('an-Modal', 'reveal-modal', 'an-alternative');
+    $newSelectors = $anScripts[ 'selectors' ];
+    $defaultSelectors = array( 'an-Modal', 'reveal-modal', 'an-alternative' );
 
     $tfStyle = '';
-    $tfStyle .= $an_option->getOption('an_alternative_custom_css');
-    $tfStyle .= $an_option->getOption('an_option_modal_custom_css');
+    $tfStyle .= $an_option->getOption( 'an_alternative_custom_css' );
+    $tfStyle .= $an_option->getOption( 'an_option_modal_custom_css' );
    
     $anCSSFileContent = wp_remote_get($anCSS);
     $anCSSFileContent = wp_remote_retrieve_body($anCSSFileContent);
@@ -248,7 +248,7 @@ function an_print_change_files_css_selectors($an_option, $anScripts) {
                 ' . $anCSSFileContent . '
             </style>
 			<script>// <![CDATA[
-				var ajax_object = { ajaxurl : "'.admin_url('admin-ajax.php').'" };
+				var ajax_object = { ajaxurl : "'.admin_url( 'admin-ajax.php' ).'" };
 			// ]]></script>
             <script type="text/javascript">
                 ' . $anJSFileContent . '

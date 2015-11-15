@@ -27,7 +27,7 @@ add_action( 'wp_dashboard_setup', 'an_dashboard_widgets' );
  * Page views & page blocked counter
  ***************************************************************/
 function an_adblock_counter() {
-    if (current_user_can( 'manage_options' ) || empty( $_POST['an_state'] ) )
+    if (current_user_can( 'manage_options' ) || empty( $_POST[ 'an_state' ] ) )
         return;
 
     $an_states = $_POST[ 'an_state' ];
@@ -74,21 +74,21 @@ function an_history_counter( $anCount, $val = null ) {
     $anToday = date( 'Y-m-d', current_time( 'timestamp', 0 ) );
     //$anToday = date( 'Y-m-d', strtotime( '1 day', strtotime( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) ) ) );
 
-    if (empty($anCount['history'][0])) {
+    if (empty($anCount[ 'history' ][0])) {
 
-        $anCount['history'][0] = array( 'date' => $anToday, 'total' => $anCount['total'], 'blocked' => $anCount['blocked'] );
+        $anCount[ 'history' ][0] = array( 'date' => $anToday, 'total' => $anCount[ 'total' ], 'blocked' => $anCount[ 'blocked' ] );
     } else {
 
-        $anDate = $anCount['history'][0]['date'];
+        $anDate = $anCount[ 'history' ][0][ 'date' ];
         $anDiff = an_date_diff( $anToday, $anDate );
 
         if ( $anDate == $anToday ) {
 
             //increase current date
             if ( $val == 'total' ) {
-                $anCount['history'][0]['total'] = $anCount['history'][0]['total'] + 1;
-            } elseif ($val == 'blocked') {
-                $anCount['history'][0]['blocked'] = $anCount['history'][0]['blocked'] + 1;
+                $anCount[ 'history' ][0][ 'total' ] = $anCount[ 'history' ][0][ 'total' ] + 1;
+            } elseif ($val == 'blocked' ) {
+                $anCount[ 'history' ][0][ 'blocked' ] = $anCount[ 'history' ][0][ 'blocked' ] + 1;
             }
         } else if ( $anDiff > 0 ) {
 
@@ -98,13 +98,13 @@ function an_history_counter( $anCount, $val = null ) {
             } elseif ( $val == 'blocked' ) {
                 $anNew = array( 'date' => $anToday, 'total' => 1, 'blocked' => 1 );
             }
-            $anCount['history'] = array_merge( array( $anNew ), $anCount['history'] );
+            $anCount[ 'history' ] = array_merge( array( $anNew ), $anCount[ 'history' ] );
 
-            if (count($anCount['history'] == 8)) {
-                $anOld = an_date_diff( $anToday, $anCount['history'][7]['date'] );
-                if ( $anOld == 7 && count( $anCount['history'] == 8 ) ) {
+            if (count($anCount[ 'history' ] == 8)) {
+                $anOld = an_date_diff( $anToday, $anCount[ 'history' ][7][ 'date' ] );
+                if ( $anOld == 7 && count( $anCount[ 'history' ] == 8 ) ) {
                     //remove last + add new one ($anRemove is a rubbish var)
-                    array_pop( $anCount['history'] );
+                    array_pop( $anCount[ 'history' ] );
                 }
             }
         }
@@ -118,10 +118,10 @@ function an_history_counter( $anCount, $val = null ) {
  * Data history extraction & order revert for chart
  ***************************************************************/
 function an_widget_data_histoty( $anCount, $val = null ) {
-    if ( empty( $anCount['history'][0] ) )
+    if ( empty( $anCount[ 'history' ][0] ) )
         return;
 
-    foreach ( $anCount['history'] as $row ) {
+    foreach ( $anCount[ 'history' ] as $row ) {
         $anOutput[] = $row[$val];
     }
     return $anOutput;
@@ -132,7 +132,7 @@ function an_widget_data_histoty( $anCount, $val = null ) {
  * Display the Dashboard Widget
  ***************************************************************/
 function an_get_counters() {
-    $anCount = get_option('adblocker_notify_counter');
+    $anCount = get_option( 'adblocker_notify_counter' );
 
     if ( empty( $anCount ) ) {
         echo '<p>No data</p>';
@@ -140,13 +140,13 @@ function an_get_counters() {
     }
 
     //prevent plugin's counter to be higher than the page counter if page is refreshed during the ajax call or if wordpress caching systeme in not badly configured
-    if ( ( $anCount['blocked'] > $anCount['total']) || ($anCount['history'][0]['blocked'] > $anCount['history'][0]['total'] ) ) {
+    if ( ( $anCount[ 'blocked' ] > $anCount[ 'total' ]) || ($anCount[ 'history' ][0][ 'blocked' ] > $anCount[ 'history' ][0][ 'total' ] ) ) {
 
-		if ( $anCount['blocked'] > $anCount['total'] ) {
-			$anCount['total'] = $anCount['blocked'];
+		if ( $anCount[ 'blocked' ] > $anCount[ 'total' ] ) {
+			$anCount[ 'total' ] = $anCount[ 'blocked' ];
 		}
-		if ( $anCount['history'][0]['blocked'] > $anCount['history'][0]['total'] ) {
-			$anCount['history'][0]['total'] = $anCount['history'][0]['blocked'];
+		if ( $anCount[ 'history' ][0][ 'blocked' ] > $anCount[ 'history' ][0][ 'total' ] ) {
+			$anCount[ 'history' ][0][ 'total' ] = $anCount[ 'history' ][0][ 'blocked' ];
 		}
 	
 		//update db	
@@ -154,76 +154,76 @@ function an_get_counters() {
 		
 	}
 
-    if ( empty($anCount['total'] ) )
-        $anCount['total'] = 0;
+    if ( empty($anCount[ 'total' ] ) )
+        $anCount[ 'total' ] = 0;
 
-    if ( empty($anCount['history'][0]['total'] ) )
-        $anCount['history'][0]['total'] = 0;
+    if ( empty($anCount[ 'history' ][0][ 'total' ] ) )
+        $anCount[ 'history' ][0][ 'total' ] = 0;
 
-    if ( empty($anCount['blocked'] ) )
-        $anCount['blocked'] = 0;
+    if ( empty($anCount[ 'blocked' ] ) )
+        $anCount[ 'blocked' ] = 0;
 
-    if ( empty($anCount['history'][0]['blocked'] ) )
-        $anCount['history'][0]['blocked'] = 0;
+    if ( empty($anCount[ 'history' ][0][ 'blocked' ] ) )
+        $anCount[ 'history' ][0][ 'blocked' ] = 0;
 
-    if ( empty($anCount['deactivated'] ) )
-        $anCount['deactivated'] = 0;
+    if ( empty($anCount[ 'deactivated' ] ) )
+        $anCount[ 'deactivated' ] = 0;
 
-    $totalNoBlocker = $anCount['total'] - $anCount['blocked'];
+    $totalNoBlocker = $anCount[ 'total' ] - $anCount[ 'blocked' ];
     $average = 0;
-    if ( $anCount['total'] != 0 ) {
-        $average = round( ( $anCount['blocked'] / $anCount['total'] ) * 100, 2 );
+    if ( $anCount[ 'total' ] != 0 ) {
+        $average = round( ( $anCount[ 'blocked' ] / $anCount[ 'total' ] ) * 100, 2 );
     }
 
-    $totalNoBlockerToday = $anCount['history'][0]['total'] - $anCount['history'][0]['blocked'];
+    $totalNoBlockerToday = $anCount[ 'history' ][0][ 'total' ] - $anCount[ 'history' ][0][ 'blocked' ];
     $averageToday = 0;
-    if ( $anCount['total'] != 0 ) {
-        $averageToday = round( ( $anCount['history'][0]['blocked'] / $anCount['history'][0]['total'] ) * 100, 2 );
+    if ( $anCount[ 'total' ] != 0 ) {
+        $averageToday = round( ( $anCount[ 'history' ][0][ 'blocked' ] / $anCount[ 'history' ][0][ 'total' ] ) * 100, 2 );
     }
     
     $output = '
         <table class="an-stats-table">
 			<tr class="an-top">
-			  <td><span class="antooltip" data-antooltip="' . __('Admins are excluded from this statistics.', 'an-translate') . '"><span class="dashicons dashicons-info"></span></span></td>
-			  <td>' . __('Total', 'an-translate') . '</td> 
-			  <td>' . __('Today', 'an-translate') . '</td>
+			  <td><span class="antooltip" data-antooltip="' . __( 'Admins are excluded from this statistics.', 'an-translate' ) . '"><span class="dashicons dashicons-info"></span></span></td>
+			  <td>' . __( 'Total', 'an-translate' ) . '</td> 
+			  <td>' . __( 'Today', 'an-translate' ) . '</td>
 			</tr>
 			<tr>
-			  <td style="text-align:left;"><span style="color:#34495e">&#9608</span> ' . __('Pages Views', 'an-translate') . '</td>
-			  <td>' . $anCount['total'] . '</td> 
-			  <td>' . $anCount['history'][0]['total'] . '</td>
+			  <td style="text-align:left;"><span style="color:#34495e">&#9608</span> ' . __( 'Pages Views', 'an-translate' ) . '</td>
+			  <td>' . $anCount[ 'total' ] . '</td> 
+			  <td>' . $anCount[ 'history' ][0][ 'total' ] . '</td>
 			</tr>
 			<tr>
-			  <td style="text-align:left;"><span style="color:#e74c3c">&#9608</span> ' . __('Pages with Adblock', 'an-translate') . '</td>
-			  <td>' . $anCount['blocked'] . '</td> 
-			  <td>' . $anCount['history'][0]['blocked'] . '</td>
+			  <td style="text-align:left;"><span style="color:#e74c3c">&#9608</span> ' . __( 'Pages with Adblock', 'an-translate' ) . '</td>
+			  <td>' . $anCount[ 'blocked' ] . '</td> 
+			  <td>' . $anCount[ 'history' ][0][ 'blocked' ] . '</td>
 			</tr>
         </table>
 
         <div class="an-canvas-container-donut">
-			<div class="an-average"><span>' . __('Total', 'an-translate') . '</span>' . $average . '%<span>' . __('Ads blocked', 'an-translate') . '</span></div>
+			<div class="an-average"><span>' . __( 'Total', 'an-translate' ) . '</span>' . $average . '%<span>' . __( 'Ads blocked', 'an-translate' ) . '</span></div>
 			<canvas id="an-canvas-donut" height="180"></canvas>
         </div>
 
         <div class="an-canvas-container-donut">
-			<div class="an-average"><span>' . __('Today', 'an-translate') . '</span>' . $averageToday . '%<span>' . __('Ads blocked', 'an-translate') . '</span></div>
+			<div class="an-average"><span>' . __( 'Today', 'an-translate' ) . '</span>' . $averageToday . '%<span>' . __( 'Ads blocked', 'an-translate' ) . '</span></div>
 			<canvas id="an-canvas-donut-today" height="180"></canvas>
         </div>
         <p class="an-deactivated">
-			<strong>' . $anCount['deactivated'] . '</strong> ' . __('Ad Blocker software deactivated', 'an-translate') . '
-			<span class="antooltip" data-antooltip="' . __('You may probably increase this number by improving your custom messages', 'an-translate') . '."><span class="dashicons dashicons-info"></span></span>
+			<strong>' . $anCount[ 'deactivated' ] . '</strong> ' . __( 'Ad Blocker software deactivated', 'an-translate' ) . '
+			<span class="antooltip" data-antooltip="' . __( 'You may probably increase this number by improving your custom messages', 'an-translate' ) . '."><span class="dashicons dashicons-info"></span></span>
         </p>
         <div id="an-canvas-container-line">
 			<canvas id="an-canvas-line"></canvas>
         </div>
 		<ul class="subsubsub">
 			<li class="an-options">
-				<a href="options-general.php?page=' . AN_ID . '">' . __('Settings', 'an-translate') . '</a> |
+				<a href="options-general.php?page=' . AN_ID . '">' . __( 'Settings', 'an-translate' ) . '</a> |
 			</li>
 			<li class="an-reset">
 				<a href="options-general.php?page=' . AN_ID . '&an-reset=true"  
-				onclick="javascript:if(!confirm(\'' . __('Are you sure you want to delete permanently your datas?', 'an-translate') . '\')) return false;" 
-				>' . __('Reset Stats', 'an-translate') . '</a>
+				onclick="javascript:if(!confirm(\'' . __( 'Are you sure you want to delete permanently your datas?', 'an-translate' ) . '\' )) return false;" 
+				>' . __( 'Reset Stats', 'an-translate' ) . '</a>
 			</li>
 		</ul>';
 
@@ -232,11 +232,11 @@ function an_get_counters() {
     $output .= 'var anWidgetOptions =' .
             json_encode(array(
                 'totalNoBlocker' => $totalNoBlocker,
-                'anCountBlocked' => $anCount['blocked'],
+                'anCountBlocked' => $anCount[ 'blocked' ],
                 'totalNoBlockerToday' => $totalNoBlockerToday,
-                'anCountBlockedHistory' => $anCount['history'][0]['blocked'],
-                'anDataHistotyTotal' => an_widget_data_histoty($anCount, 'total'),
-                'anDataHistotyBlocked' => an_widget_data_histoty($anCount, 'blocked'),
+                'anCountBlockedHistory' => $anCount[ 'history' ][0][ 'blocked' ],
+                'anDataHistotyTotal' => an_widget_data_histoty($anCount, 'total' ),
+                'anDataHistotyBlocked' => an_widget_data_histoty($anCount, 'blocked' ),
     ));
     $output .= '/* ]]> */';
     $output .= '</script>';
